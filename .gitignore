@@ -306,7 +306,3 @@ dist
 # cypress artifacts
 cypress/videos
 cypress/screenshots
-
-# hf models
-hf-cache/*
-!hf-cache/
