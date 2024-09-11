@@ -7,6 +7,7 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "Running inside a Cloud Foundry instance, setting paths"
     # export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
     # export PATH="$HOME/deps/0/python/bin:$PATH"
+
     # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
 
     apt update
