@@ -30,6 +30,16 @@ RUN rm -rf requirements.txt
 # Copy the rest of the application code into the container
 COPY . .
 
+# Define local variables
+ARG COMBINED_CERT_PATH=/workspace/venv/lib/python3.11/site-packages/certifi/cacert.pem
+
+# Set environment variables for CA certificates
+ENV REQUESTS_CA_BUNDLE=$COMBINED_CERT_PATH
+ENV SSL_CERT_FILE=$COMBINED_CERT_PATH
+
+# Append z-root-public.pem to the combined certificate path
+RUN cat z-root-public.pem >> ${COMBINED_CERT_PATH}
+
 # Build the frontend application with increased memory
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build

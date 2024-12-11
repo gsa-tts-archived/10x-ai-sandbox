@@ -10,7 +10,6 @@ from langchain.retrievers import ContextualCompressionRetriever, EnsembleRetriev
 from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
 
-
 from open_webui.apps.ollama.main import (
     GenerateEmbedForm,
     generate_ollama_batch_embeddings,
