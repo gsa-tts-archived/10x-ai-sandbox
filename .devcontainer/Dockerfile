@@ -13,8 +13,8 @@ EXPOSE 8080
 COPY package*.json ./
 
 # Install cypress with zscaler root cert
-COPY z-root.pem ./
-RUN NODE_EXTRA_CA_CERTS=/workspace/z-root.pem npm install cypress
+COPY z-root-public.pem ./
+RUN NODE_EXTRA_CA_CERTS=/workspace/z-root-public.pem npm install cypress
 
 # Install Node.js dependencies
 RUN npm install
@@ -24,6 +24,8 @@ COPY backend/requirements.txt ./
 RUN python3 -m venv /workspace/venv \
     && . /workspace/venv/bin/activate \
     && pip install --no-cache-dir -r requirements.txt
+
+RUN rm -rf requirements.txt
 
 # Copy the rest of the application code into the container
 COPY . .
