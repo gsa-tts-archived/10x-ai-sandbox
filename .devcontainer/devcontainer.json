@@ -2,6 +2,10 @@
   "name": "Python DevContainer",
   "dockerFile": "Dockerfile",
   "context": "..",
+  "containerEnv": {
+      "REQUESTS_CA_BUNDLE": "/workspace/venv/lib/python3.11/site-packages/certifi/cacert.pem",
+      "SSL_CERT_FILE": "/workspace/venv/lib/python3.11/site-packages/certifi/cacert.pem"
+  },
   "workspaceFolder": "/workspace",
   "customizations": {
     "vscode": {

@@ -44,5 +44,8 @@ RUN cat z-root-public.pem >> ${COMBINED_CERT_PATH}
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
+# Run the install_ollama.sh script
+RUN chmod +x ./install_ollama.sh && ./install_ollama.sh
+
 # Command to run the application
 CMD ["ls"]
