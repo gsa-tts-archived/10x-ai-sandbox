@@ -26,6 +26,5 @@
       }
     }
   },
-  "postCreateCommand": "ls",
   "forwardPorts": [8080]
 }

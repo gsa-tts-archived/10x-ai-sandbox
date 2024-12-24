@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Start the ollama server
-ollama serve &
+# ollama serve &
 
 # Start the application
-./backend/start.sh &
+. ./venv/bin/activate && ./backend/start.sh &
 
 # Wait for all background processes to exit
 wait
