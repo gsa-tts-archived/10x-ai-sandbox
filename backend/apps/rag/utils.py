@@ -35,10 +35,11 @@ async def query_doc(
     query: str,
     embedding_function,
     k: int,
+    query_embeddings: Optional[list[float]] = None,
 ):
     try:
-
-        query_embeddings = await embedding_function(query)
+        if query_embeddings is None:
+            query_embeddings = await embedding_function(query)
 
         log.info(f"Query Embeddings length: {len(query_embeddings)}")
 
@@ -119,7 +120,7 @@ async def merge_and_sort_query_results(query_results, k, reverse=False):
         combined_metadatas = []
 
         for query_result in query_results:
-            log.error(f"query_result {query_result}")
+            # log.error(f"query_result {query_result}")
             # these are all double nested arrays
             # ids = query_result.ids[0]
             documents = query_result.documents[0]
@@ -171,16 +172,20 @@ async def query_collection(
     query: str,
     embedding_function,
     k: int,
+    query_embeddings: Optional[list[float]] = None,
 ):
     results = []
     for collection_name in collection_names:
         try:
             log.info(f"Firing query_collection for collection_name {collection_name}")
+            if query_embeddings is None:
+                query_embeddings = await embedding_function(query)
             result = await query_doc(
                 collection_name=collection_name,
                 query=query,
                 k=k,
                 embedding_function=embedding_function,
+                query_embeddings=query_embeddings,
             )
             results.append(result)
         except:
@@ -391,6 +396,8 @@ async def get_rag_context(
     extracted_collections = []
     relevant_contexts = []
 
+    query_embeddings = await embedding_function(query)
+
     log.info(f"Processing {len(docs)} documents")
     for idx, doc in enumerate(docs):
         log.info(f"Processing document {idx+1}/{len(docs)}")
@@ -436,6 +443,7 @@ async def get_rag_context(
                         query=query,
                         embedding_function=embedding_function,
                         k=k,
+                        query_embeddings=query_embeddings,
                     )
         except Exception as e:
             log.error(f"Error processing document {idx+1}: {str(e)}")
