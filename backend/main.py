@@ -401,7 +401,7 @@ class ChatCompletionMiddleware(BaseHTTPMiddleware):
 
                 del data["docs"]
 
-                # log.debug(f"rag_context: {rag_context}, citations: {citations}")
+                log.debug(f"rag_context: {rag_context}, citations: {citations}")
 
             if context != "":
                 system_prompt = rag_template(
@@ -414,12 +414,20 @@ class ChatCompletionMiddleware(BaseHTTPMiddleware):
                     f"\n{system_prompt}", data["messages"]
                 )
 
-            # log.error(f"chat data is:\n{data}")
+            log.debug(f"chat data is:\n{data}")
 
             tokens = 0
             for message in data["messages"]:
-                tokens += len(message["content"].split())
-            cost = tokens * 0.0000025  # input token cost
+                if isinstance(message["content"], list):
+                    for item in message["content"]:
+                        if item["type"] == "text":
+                            tokens += len(item["text"].split())
+                        else:
+                            tokens += 765  # cost of any image over 512
+                else:
+                    # TODO: only parse text key of content
+                    tokens += len(message["content"].split())
+            cost = tokens * 0.0000025
 
             modified_body_bytes = json.dumps(data).encode("utf-8")
 
