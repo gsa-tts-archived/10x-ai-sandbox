@@ -74,6 +74,34 @@ def get_http_authorization_cred(auth_header: str):
         raise ValueError(ERROR_MESSAGES.INVALID_TOKEN)
 
 
+# import json
+
+
+# def log_request(request: Request):
+#     request_data = {
+#         "method": request.method,
+#         "url": str(request.url),
+#         "headers": dict(request.headers),
+#         "query_params": dict(request.query_params),
+#         "path_params": request.path_params,
+#         "cookies": request.cookies,
+#     }
+
+#     # Read the request body if it's a POST, PUT, or PATCH request
+#     if request.method in ["POST", "PUT", "PATCH"]:
+#         try:
+#             body = request.json()
+#             if len(body) > 1024 * 1024:  # Limit to 1MB
+#                 request_data["body"] = "Request body too large to log"
+#             else:
+#                 request_data["body"] = body
+#         except Exception as e:
+#             request_data["body"] = f"Error reading body: {str(e)}"
+
+#     formatted_request = json.dumps(request_data, indent=4)
+#     logging.error(f"Request: {formatted_request}")
+
+
 def get_current_user(
     request: Request,
     auth_token: HTTPAuthorizationCredentials = Depends(bearer_security),
