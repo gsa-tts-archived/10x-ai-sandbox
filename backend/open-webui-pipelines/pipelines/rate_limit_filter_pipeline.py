@@ -12,7 +12,6 @@ class Pipeline:
         pipelines: List[str] = []
         priority: int = 0
         requests_per_minute: Optional[int] = None
-        # requests_per_hour: Optional[int] = None
 
     def __init__(self):
         redis_url = os.getenv("RATE_LIMIT_REDIS_URL")
@@ -31,7 +30,6 @@ class Pipeline:
         self.valves = self.Valves(
             pipelines=["*"],
             requests_per_minute=requests_per_minute,
-            # requests_per_hour=int(os.getenv("RATE_LIMIT_REQUESTS_PER_HOUR", 1000))
         )
 
         parsed_url = urlparse(redis_url)
@@ -53,7 +51,6 @@ class Pipeline:
         now = int(time.time())
         return (
             f"user:{user_id}:{model_id}:rate:minute:{now // 60}",
-            f"user:{user_id}:{model_id}:rate:hour:{now // 3600}",
         )
 
     def is_rate_limited(self, user_id: str, model_id: str) -> bool:
@@ -67,9 +64,6 @@ class Pipeline:
         ):
             return True
 
-        # if self.valves.requests_per_hour and int(self.redis_client.get(hour_key) or 0) >= self.valves.requests_per_hour:
-        #    return True
-
         return False
 
     def log_request(self, user_id: str, model_id: str):
@@ -77,9 +71,6 @@ class Pipeline:
 
         self.redis_client.incr(minute_key)
         self.redis_client.expire(minute_key, 60, nx=True)
-
-        # self.redis_client.incr(hour_key)
-        # self.redis_client.expire(hour_key, 3600, nx=True)
 
     async def inlet(self, body: dict, user: Optional[dict] = None) -> dict:
         user_id = user.get("id", "default_user")
