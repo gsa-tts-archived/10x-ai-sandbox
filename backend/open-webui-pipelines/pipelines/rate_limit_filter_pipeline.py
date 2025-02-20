@@ -34,10 +34,6 @@ class Pipeline:
             # requests_per_hour=int(os.getenv("RATE_LIMIT_REQUESTS_PER_HOUR", 1000))
         )
 
-        redis_url = os.getenv("RATE_LIMIT_REDIS_URL")
-        if not redis_url:
-            raise KeyError("RATE_LIMIT_REDIS_URL environment variable is required")
-
         parsed_url = urlparse(redis_url)
         if not parsed_url.hostname:
             raise ValueError("Invalid RATE_LIMIT_REDIS_URL: missing hostname")
