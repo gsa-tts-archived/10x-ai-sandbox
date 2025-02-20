@@ -46,16 +46,14 @@ class Pipeline:
         except Exception as e:
             raise ConnectionError(f"Failed to connect to Redis: {str(e)}")
 
-    def get_redis_keys(self, user_id: str, model_id: str):
+    def get_redis_key(self, user_id: str, model_id: str):
         """Generate Redis keys for rate limits."""
         now = int(time.time())
-        return (
-            f"user:{user_id}:{model_id}:rate:minute:{now // 60}",
-        )
+        return f"user:{user_id}:{model_id}:rate:minute:{now // 60}"
 
     def is_rate_limited(self, user_id: str, model_id: str) -> bool:
         """Check if the user exceeds rate limits."""
-        minute_key, hour_key = self.get_redis_keys(user_id, model_id)
+        minute_key = self.get_redis_key(user_id, model_id)
 
         if (
             self.valves.requests_per_minute
@@ -67,7 +65,7 @@ class Pipeline:
         return False
 
     def log_request(self, user_id: str, model_id: str):
-        minute_key, hour_key = self.get_redis_keys(user_id, model_id)
+        minute_key = self.get_redis_key(user_id, model_id)
 
         self.redis_client.incr(minute_key)
         self.redis_client.expire(minute_key, 60, nx=True)
