@@ -131,6 +131,7 @@ type Settings = {
 	title?: TitleSettings;
 	splitLargeDeltas?: boolean;
 	chatDirection: 'LTR' | 'RTL';
+	acceptedTermsVersion?: number;
 
 	system?: string;
 	requestFormat?: string;

@@ -43,7 +43,7 @@
 	import SettingsModal from '$lib/components/chat/SettingsModal.svelte';
 	import { MAIN_CONTENT_ID as mainContentId } from '$lib/constants';
 	import ChangelogModal from '$lib/components/ChangelogModal.svelte';
-	import TermsModal from '$lib/components/TermsModal.svelte';
+	import TermsModal, { TERMS_VERSION } from '$lib/components/TermsModal.svelte';
 	import AccountPending from '$lib/components/layout/Overlay/AccountPending.svelte';
 	import UpdateInfoToast from '$lib/components/layout/UpdateInfoToast.svelte';
 
@@ -188,7 +188,10 @@
 				showChangelog.set($settings?.version !== $config.version);
 			}
 
-			showTerms.set(localStorage.termsAccepted !== 'true');
+			// Check if user has accepted the latest terms
+			if ($settings?.acceptedTermsVersion !== TERMS_VERSION) {
+				showTerms.set(true);
+			}
 
 			if ($page.url.searchParams.get('temporary-chat') === 'true') {
 				temporaryChatEnabled.set(true);

@@ -1,9 +1,22 @@
+<script context="module">
+	// Update this version number when updating the terms content. Any change to
+	// this value will trigger a re-display of the terms for all users.
+	export const TERMS_VERSION = 1;
+</script>
+
 <script lang="ts">
-	import { user } from '$lib/stores';
+	import { settings, user } from '$lib/stores';
 
 	import Modal from './common/Modal.svelte';
+	import { updateUserSettings } from '$lib/apis/users';
 
 	export let show = false;
+
+	async function acceptTerms() {
+		await settings.set({ ...$settings, ...{ acceptedTermsVersion: TERMS_VERSION } });
+		await updateUserSettings(localStorage.token, { ui: $settings });
+		show = false;
+	}
 </script>
 
 <Modal bind:show allowEasyDismiss={false}>
@@ -59,10 +72,7 @@
 		</div>
 		<div class="flex justify-end pt-3 text-sm font-medium">
 			<button
-				on:click={async () => {
-					localStorage.termsAccepted = true;
-					show = false;
-				}}
+				on:click={acceptTerms}
 				class=" px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-gray-100 transition rounded-lg"
 			>
 				<span class="relative">Agree and continue</span>
