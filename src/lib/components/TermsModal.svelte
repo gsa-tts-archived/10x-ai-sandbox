@@ -31,12 +31,14 @@
 					<li>
 						GSA's <a
 							class="underline"
+							target="_blank"
 							href="https://insite.gsa.gov/directives-library/gsa-information-technology-it-general-rules-of-behavior-4"
 							>IT Rules of Behavior</a
 						>
 						and
 						<a
 							class="underline"
+							target="_blank"
 							href="https://insite.gsa.gov/directives-library/use-of-artificial-intelligence-at-gsa"
 							>AI Directive</a
 						> prohibit using the chatbot for harm or inappropriately.
@@ -49,7 +51,9 @@
 				</ul>
 				<p class="my-2 font-semibold">
 					If you have any feedback, need further assistance, or have an issue, please reach out to
-					the team at <a class="underline" href="mailto:chat@gsa.gov">chat@gsa.gov</a>.
+					the team at <a class="underline" target="_blank" href="mailto:chat@gsa.gov"
+						>chat@gsa.gov</a
+					>.
 				</p>
 			</div>
 		</div>
