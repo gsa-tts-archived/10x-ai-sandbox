@@ -20,12 +20,7 @@
 </script>
 
 <Modal bind:show allowEasyDismiss={false}>
-	<div
-		role="dialog"
-		aria-labelledby="terms-heading"
-		aria-describedby="terms-content"
-		aria-modal="true"
-	>
+	<div role="dialog" aria-labelledby="terms-heading" aria-modal="true" tabindex="-1">
 		<div class="px-5 pt-4">
 			<h2 id="terms-heading" class="text-xl text-[#00538E] font-semibold">
 				Welcome{$user?.name ? ` ${$user.name}` : ''}!
@@ -33,9 +28,9 @@
 		</div>
 
 		<div class="w-full p-4 px-5 text-gray-700 dark:text-gray-100">
-			<div id="terms-content" class="overflow-y-scroll max-h-100 scrollbar-hidden">
+			<div class="overflow-y-scroll max-h-100 scrollbar-hidden">
 				<div class="mb-3">
-					<p tabindex="-1" class="my-2 font-semibold">
+					<p class="my-2 font-semibold">
 						GSA Intelligence is the platform for GSA's AI chatbot. You can use GSAi to help you
 						write and edit documents, summarize information, research a topic, and more.
 					</p>
