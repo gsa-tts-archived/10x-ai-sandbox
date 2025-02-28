@@ -27,5 +27,5 @@ kill $spinner_pid
 
 npm install
 npm run format
+npm run format:backend
 npm run i18n:parse
-git add .
