@@ -20,5 +20,3 @@ npm install
 npm run format
 npm run format:backend
 npm run i18n:parse
-
-python suggest_pr_description.py
