@@ -2,12 +2,22 @@ git rm -r --cached build/ >/dev/null 2>&1 || true
 (while sleep 1; do printf '.'; done) &
 spinner_pid=$!
 
+# Stash any unstaged changes
+git stash push --keep-index --include-untracked --message "pre-commit stash"
+
 echo "Scanning commit... 30-60s 💅🥱⏳"
 
 # Exit on any error
 set -e
 
 # Ensure cleanup happens even if script fails
+# Revert all changes made by the pre-commit hook when an error occurs,
+on_error() {
+    kill $spinner_pid
+    echo "🚨 An error occurred during the pre-commit hook. Your unstaged changes were stashed. Run 'git stash list' to check for them, and 'git stash pop' to restore."
+}
+trap on_error EXIT
+
 cleanup() {
     echo "Detected secrets in staged files!"
     kill $spinner_pid
@@ -29,3 +39,10 @@ npm install
 npm run format
 npm run format:backend
 npm run i18n:parse
+
+# Add the formatting changes to the commit
+git add .
+# Restore any unstaged changes that existed before the pre-commit hook
+git stash pop -q
+
+trap - EXIT
