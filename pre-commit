@@ -43,6 +43,6 @@ npm run i18n:parse
 # Add the formatting changes to the commit
 git add .
 # Restore any unstaged changes that existed before the pre-commit hook
-git stash pop
+git stash pop -q
 
 trap - EXIT
