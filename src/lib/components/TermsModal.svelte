@@ -31,16 +31,16 @@
 			<div class="overflow-y-scroll max-h-100 scrollbar-hidden">
 				<div class="mb-3">
 					<p class="my-2 font-semibold">
-						GSA Intelligence is the platform for GSA's AI chatbot. You can use GSAi to help you
+						GSA Intelligence is the platform for GSA's AI chatbot. You can use GSA Chat to help you
 						write and edit documents, summarize information, research a topic, and more.
 					</p>
 					<p class="my-2 font-semibold">
-						By using GSAi, you understand and agree to the following:
+						By using GSA Chat, you understand and agree to the following:
 					</p>
 					<ul class="terms-list list-none p-0">
 						<li>
 							All prompts and responses will be logged. Your data will be protected and only be used
-							to improve and further refine the GSAi platform.
+							to improve and further refine the GSA Chat platform.
 						</li>
 						<li>
 							GSA's <a
