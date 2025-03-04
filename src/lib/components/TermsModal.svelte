@@ -23,7 +23,7 @@
 	<div role="dialog" aria-labelledby="terms-heading" aria-modal="true" tabindex="-1">
 		<div class="px-5 pt-4">
 			<h2 id="terms-heading" class="text-xl text-[#00538E] font-semibold">
-				Welcome{$user?.name ? ` ${$user.name}` : ''}!
+				Welcome{$user?.name ? ` ${$user.name}` : ''}! <span class="sr-only">Please review and accept the terms and conditions before proceeding.</span>
 			</h2>
 		</div>
 
