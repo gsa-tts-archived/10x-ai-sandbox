@@ -3,12 +3,14 @@ name: Frontend Build
 on:
   push:
     branches:
-      - main
-      - dev
+      - cloudgov/dev
+      - cloudgov/staging
+      - cloudgov/prod
   pull_request:
     branches:
-      - main
-      - dev
+      - cloudgov/dev
+      - cloudgov/staging
+      - cloudgov/prod
 
 jobs:
   build:
@@ -21,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.15.1' # Or specify any other version you want to use
+          node-version: '20.18.1' # Or specify any other version you want to use
       
       - name: Install Dependencies
         run: npm install
