@@ -1,5 +1,5 @@
-env: staging
-app_name: gsai-gsa-staging
+env: prod
+app_name: gsai-gsa
 web_instances: 2
 web_memory: 6G
 worker_memory: 6G

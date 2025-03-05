@@ -137,7 +137,7 @@
 />
 
 <div class="w-full h-screen max-h-[100dvh] text-white relative">
-	<div class="w-full h-full absolute top-0 left-0 bg-white dark:bg-black"></div>
+	<div class="w-full h-full absolute top-0 left-0 bg-white dark:bg-black" />
 
 	{#if loaded}
 		<div class="fixed m-10 z-50">
@@ -290,9 +290,9 @@
 										>
 											{mode === 'signin'
 												? $i18n.t('Sign in')
-												: ($config?.onboarding ?? false)
-													? $i18n.t('Create Admin Account')
-													: $i18n.t('Create Account')}
+												: $config?.onboarding ?? false
+												? $i18n.t('Create Admin Account')
+												: $i18n.t('Create Account')}
 										</button>
 
 										{#if $config?.features.enable_signup && !($config?.onboarding ?? false)}
@@ -421,8 +421,7 @@
 									class="flex justify-center items-center text-xs w-full text-center underline"
 									type="button"
 									on:click={() => {
-										if (mode === 'ldap')
-											mode = ($config?.onboarding ?? false) ? 'signup' : 'signin';
+										if (mode === 'ldap') mode = $config?.onboarding ?? false ? 'signup' : 'signin';
 										else mode = 'ldap';
 									}}
 								>
