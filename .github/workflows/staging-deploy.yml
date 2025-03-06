@@ -10,8 +10,7 @@ permissions:
 
 jobs:
   deploy:
-    environment:
-      name: staging
+    environment: staging
     runs-on: ubuntu-latest
     if: ${{ github.event.head_commit.message != 'Merge pull request*' }}
 
