@@ -1,6 +1,6 @@
 ---
 applications:
-  - name: gsa-ai-sandbox
+  - name: gsai-gsa-((DEPLOY_ROUTE))
     buildpacks:
       - python_buildpack
       - nodejs_buildpack
