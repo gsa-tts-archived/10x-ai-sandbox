@@ -296,6 +296,7 @@
 			{/if}
 
 			<div class="px-3 my-2 max-h-64 overflow-y-auto scrollbar-hidden group">
+				<div class="text-[#454545] font-semibold my-1 text-sm">Available models</div>
 				{#each filteredItems as item, index}
 					<button
 						aria-label="model-item"
