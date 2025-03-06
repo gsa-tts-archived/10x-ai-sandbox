@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 2
       - uses: ./.github/actions/setup-project
       - name: Print env name
-        run: echo ${{ job.environment.name }}
+        run: echo staging
       - name: Deploy to cloud.gov
         uses: 18f/cg-deploy-action@main
         env:
@@ -48,9 +48,9 @@ jobs:
           cf_username: ${{ secrets.GSAI_GSA_CLOUDGOV_USERNAME }}
           cf_password: ${{ secrets.GSAI_GSA_CLOUDGOV_PASSWORD }}
           cf_org: gsai-gsa
-          cf_space: ${{ job.environment.name }}
+          cf_space: staging
           push_arguments: >-
-            --vars-file deploy-config/${{ job.environment.name }}.yml
+            --vars-file deploy-config/staging.yml
             --var OLLAMA_BASE_URL="$OLLAMA_BASE_URL"
             --var WEBUI_NAME="$WEBUI_NAME"
             --var SCARF_NO_ANALYTICS="$SCARF_NO_ANALYTICS"
