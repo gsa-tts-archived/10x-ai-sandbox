@@ -9,6 +9,7 @@ from typing import List, Union, Generator, Iterator
 
 
 from utils.pipelines.auth import bearer_security, get_current_user
+from utils.pipelines.aws import bedrock_client
 from utils.pipelines.main import get_last_user_message, stream_message_template
 from utils.pipelines.misc import convert_to_raw_url
 
@@ -647,13 +648,19 @@ async def generate_openai_chat_completion(form_data: OpenAIChatCompletionForm):
         if form_data.stream:
 
             def stream_content():
-                res = pipe(
-                    user_message=user_message,
-                    model_id=pipeline_id,
-                    messages=messages,
-                    body=form_data.model_dump(),
-                )
-
+                try:
+                    res = pipe(
+                        user_message=user_message,
+                        model_id=pipeline_id,
+                        messages=messages,
+                        body=form_data.model_dump(),
+                    )
+                except bedrock_client.exceptions.ThrottlingException as e:
+                    # TODO: Return appropriate response here.
+                    raise HTTPException(
+                        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                        detail="You've reached your quota for this model. Please try again later.",
+                    )
                 logging.info(f"stream:true:{res}")
 
                 if isinstance(res, str):
