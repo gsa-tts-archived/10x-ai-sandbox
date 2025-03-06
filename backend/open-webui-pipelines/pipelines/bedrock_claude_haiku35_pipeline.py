@@ -131,6 +131,39 @@ class Pipeline:
             else:
                 print(f"HTTP Error: {e} Response: {r.text}")
             return f"Error with r: {e} ({r.text}) for body:\n{body}\nand filtered_body:\n{filtered_body}"
+        except self.bedrock_client.exceptions.AccessDeniedException as e:
+            print("Access Denied Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ResourceNotFoundException as e:
+            print("Resource Not Found Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ThrottlingException as e:
+            print("Throttling Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ModelTimeoutException as e:
+            print("Model Timeout Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.InternalServerException as e:
+            print("Internal Server Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ServiceUnavailableException as e:
+            print("Service Unavailable Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ModelStreamErrorException as e:
+            print("Model Stream Error Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ValidationException as e:
+            print("Validation Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ModelNotReadyException as e:
+            print("Model Not Ready Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ServiceQuotaExceededException as e:
+            print("Service Quota Exceeded Exception:", e)
+            raise e
+        except self.bedrock_client.exceptions.ModelErrorException as e:
+            print("Model Error Exception:", e)
+            raise e
         except Exception as e:
             print(
                 f"Error without r: {e} for body:\n{body}\nand filtered_body:\n{filtered_body}"
