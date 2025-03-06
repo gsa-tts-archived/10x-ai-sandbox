@@ -3,9 +3,7 @@ name: Deploy to staging environment
 on:
   push:
     branches:
-      - cloudgov/dev
       - cloudgov/staging
-      - cloudgov/prod
 
 permissions:
   contents: write
@@ -13,7 +11,7 @@ permissions:
 jobs:
   deploy:
     environment:
-      name: ${{ github.ref == 'refs/heads/cloudgov/prod' && 'prod' || github.ref == 'refs/heads/cloudgov/staging' && 'staging' || 'dev' }}
+      name: staging
     runs-on: ubuntu-latest
     if: ${{ github.event.head_commit.message != 'Merge pull request*' }}
 
