@@ -71,6 +71,7 @@ jobs:
             --var RAG_OPENAI_API_BASE_URL="$RAG_OPENAI_API_BASE_URL"
             --var RAG_OPENAI_API_KEY="$RAG_OPENAI_API_KEY"
             --var RAG_EMBEDDING_ENGINE="$RAG_EMBEDDING_ENGINE"
+            --var DEPLOY_ROUTE="gsai-dev"
 
   bail:
     runs-on: ubuntu-latest

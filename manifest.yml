@@ -9,7 +9,7 @@ applications:
     memory: ((web_memory))
     disk_quota: 7G
     routes:
-      - route: gsa-ai-sandbox.app.cloud.gov
+      - route: ((DEPLOY_ROUTE)).app.cloud.gov
     env:
       WEBUI_SECRET_KEY: ((WEBUI_SECRET_KEY))
       OLLAMA_BASE_URL: ((OLLAMA_BASE_URL))
