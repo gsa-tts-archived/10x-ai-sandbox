@@ -19,7 +19,8 @@
 		temporaryChatEnabled,
 		channels,
 		socket,
-		config
+		config,
+		WEBUI_NAME,
 	} from '$lib/stores';
 	import { onMount, getContext, tick, onDestroy } from 'svelte';
 
@@ -39,7 +40,7 @@
 		importChat
 	} from '$lib/apis/chats';
 	import { createNewFolder, getFolders, updateFolderParentIdById } from '$lib/apis/folders';
-	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { WEBUI_BASE_URL} from '$lib/constants';
 
 	import ArchivedChatsModal from './Sidebar/ArchivedChatsModal.svelte';
 	import UserMenu from './Sidebar/UserMenu.svelte';
@@ -497,7 +498,7 @@
 							crossorigin="anonymous"
 							src="{WEBUI_BASE_URL}/static/gsa-logo.svg"
 							class="size-7 -translate-x-1.5"
-							alt="GSA logo"
+							alt="GSA {$WEBUI_NAME}"
 						/>
 					</div>
 					<div class=" self-center font-medium text-2xl text-gray-850 dark:text-white font-primary">

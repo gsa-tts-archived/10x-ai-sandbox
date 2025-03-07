@@ -114,26 +114,19 @@
 										.join(', ')}
 									placement="top"
 								>
-									<button
-										on:click={() => {
-											selectedModelIdx = modelIdx;
-										}}
-										disabled={!models.length < 2}
-									>
-										<img
-											crossorigin="anonymous"
-											src={model?.info?.meta?.profile_image_url ??
-												($i18n.language === 'dg-DG'
-													? `/doge.png`
-													: `${WEBUI_BASE_URL}/static/gsai.png`)}
-											class=" w-16 sm:w-20 h-fit"
-											alt="GSAI"
-											draggable="false"
-										/>
-									</button>
-								</Tooltip>
-							{/each}
-						</div>
+									<img
+										crossorigin="anonymous"
+										src={model?.info?.meta?.profile_image_url ??
+											($i18n.language === 'dg-DG'
+												? `/doge.png`
+												: `${WEBUI_BASE_URL}/static/gsai.png`)}
+										class=" w-16 sm:w-20"
+										alt=""
+										draggable="false"
+									/>
+								</button>
+							</Tooltip>
+						{/each}
 					</div>
 				{/if}
 
