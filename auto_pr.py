@@ -67,7 +67,6 @@ Do not include any other text or explanations. Just the title and description be
 
 
 def get_pr_description():
-    print("Sending diff to the model for interpretation...")
     filtered_body = {
         "messages": [
             {
@@ -79,6 +78,7 @@ def get_pr_description():
         "max_tokens": 4000,
     }
 
+    print("Sending diff to the model for interpretation...")
     model_id = os.getenv("BEDROCK_CLAUDE_ARN", None)
     r = bedrock_client.invoke_model_with_response_stream(
         body=json.dumps(filtered_body), modelId=model_id
@@ -97,15 +97,39 @@ def get_pr_description():
     return pr_title, pr_description
 
 
+def get_current_branch():
+    print("Getting current branch...")
+    result = subprocess.run(
+        ["git", "branch", "--show-current"], capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        print("Error getting current branch", file=sys.stderr)
+        sys.exit(1)
+    return result.stdout.strip()
+
+
 def main():
     pr_title, pr_description = get_pr_description()
     print("Generating PR description...")
     print(pr_description)
     print("✨ Check out the suggested PR description above ✨\n")
-    # print("🚀 If you like it, feel free to copy and paste it into your PR! 🎉")
-    # create PR from current branch to main
+    current_branch = get_current_branch()
+    target_branch = "main"
+
     result = subprocess.run(
-        ["gh", "pr", "create", "--title", pr_title, "--body", pr_description],
+        [
+            "gh",
+            "pr",
+            "create",
+            "--title",
+            pr_title,
+            "--body",
+            pr_description,
+            "--base",
+            target_branch,
+            "--head",
+            current_branch,
+        ],
         capture_output=True,
         text=True,
     )
