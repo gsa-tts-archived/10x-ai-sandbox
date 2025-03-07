@@ -118,6 +118,8 @@ def main():
     current_branch = get_current_branch()
     target_branch = "main"
 
+    print("Creating PR from {current_branch} into {target_branch}...")
+
     result = subprocess.run(
         [
             "gh",
@@ -137,9 +139,15 @@ def main():
     )
     if result.returncode != 0:
         try:
-            print(f"Error creating PR:\n{result.stderr}", file=sys.stderr)
+            print(
+                f"Error creating PR from {current_branch} into {target_branch}:\n{result.stderr}",
+                file=sys.stderr,
+            )
         except:
-            print(f"Error creating PR: {result}", file=sys.stderr)
+            print(
+                f"Error creating PR from {current_branch} into {target_branch}:\n{result}",
+                file=sys.stderr,
+            )
         finally:
             sys.exit(1)
     print("✨ PR created successfully! ✨")
