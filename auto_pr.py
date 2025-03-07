@@ -110,7 +110,9 @@ def get_current_branch():
 
 def main():
     pr_title, pr_description = get_pr_description()
-    print("Generating PR description...")
+    print("Generating PR title and description...")
+    print("✨ Check out the suggested PR description below ✨\n")
+    print(f"{pr_title}\n")
     print(pr_description)
     print("✨ Check out the suggested PR description above ✨\n")
     current_branch = get_current_branch()
