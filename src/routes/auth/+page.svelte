@@ -15,6 +15,10 @@
 
 	import Spinner from '$lib/components/common/Spinner.svelte';
 	import OnBoarding from '$lib/components/OnBoarding.svelte';
+	import Banner from '$lib/components/uswds/Banner.svelte';
+	import Alert from '$lib/components/uswds/Alert.svelte';
+	import Identifier from '$lib/components/uswds/Identifier.svelte';
+	import IdentifierLink from '$lib/components/uswds/IdentifierLink.svelte';
 
 	const i18n = getContext('i18n');
 
@@ -136,26 +140,18 @@
 	}}
 />
 
-<div class="w-full h-screen max-h-[100dvh] text-white relative">
-	<div class="w-full h-full absolute top-0 left-0 bg-white dark:bg-black"></div>
-
+<div class="w-full max-h-[100dvh] text-white">
 	{#if loaded}
 		<div
-			class="fixed bg-transparent min-h-screen w-full flex flex-col justify-between font-primary z-50 text-black dark:text-white"
+			class="bg-transparent min-h-screen w-full flex flex-col justify-between font-primary z-50 text-black dark:text-white"
 		>
 			<div class="w-screen">
-				<div class="p-1 bg-[#f0f0f0] flex flex-row items-baseline justify-center">
-					<img src="/assets/images/us_flag_small.png" alt="US flag" class="h-[11px] mr-2" />
-					<p class="text-xs leading-[unset]">An official website of the United States government</p>
-				</div>
+				<Banner centered />
 
-				<div class="p-2 bg-[#E7F6F8] flex flex-row items-center justify-center">
-					<img src="/assets/images/info.svg" alt="Info" class="h-[24px] mr-2" />
-					<p class="text-sm leading-[unset]">
-						<strong>This tool is still in BETA.</strong> We are continuously updating functionality and
-						collecting feedback.
-					</p>
-				</div>
+				<Alert type="info" slim border={false} centered margins={false}>
+					<strong>This tool is still in BETA.</strong> We are continuously updating functionality and
+					collecting feedback.
+				</Alert>
 			</div>
 
 			<div class="flex flex-row justify-center">
@@ -471,36 +467,15 @@
 				</div>
 			</div>
 
-			<div class="w-screen text-white bg-[#1a1a1a] flex flex-row justify-center">
-				<div class="flex flex-col sm:my-8 sm:space-y-8">
-					<div class="hidden sm:flex flex-row items-end">
-						<img src="/assets/images/gsa_logo.svg" alt="GSA logo" class="h-16 mr-4" />
-						<div>
-							<p>chat.gsa.gov</p>
-							<p class="font-bold">An official website of the US General Services Administration</p>
-						</div>
-					</div>
-
-					<div
-						class="flex flex-col sm:flex-row items-center sm:justify-between sm:space-x-32 underline"
-					>
-						<div>
-							<a href="mailto:chat@gsa.gov">chat@gsa.gov</a>
-						</div>
-						<!-- links are currently TBD
-						<div>
-							<a href="#">Help</a>
-						</div>
-						<div>
-							<a href="#">Privacy statement</a>
-						</div>
-						<div>
-							<a href="#">Accessibility statement</a>
-						</div>
-						-->
-					</div>
-				</div>
-			</div>
+			<Identifier
+				logo="/static/gsa_logo.svg"
+				domain="chat.gsa.gov"
+				agency="U.S. General Services Administration"
+				agencyLink="https://www.gsa.gov/"
+				showUsaGovSection={false}
+			>
+				<IdentifierLink href="mailto:chat@gsa.gov" text="chat@gsa.gov" />
+			</Identifier>
 		</div>
 	{/if}
 </div>

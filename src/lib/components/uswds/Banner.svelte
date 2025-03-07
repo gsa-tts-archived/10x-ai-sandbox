@@ -5,7 +5,7 @@
 	import iconHttps from '@uswds/uswds/img/icon-https.svg';
 
 	// Custom variants (not part of USWDS)
-	export let centered: boolean = false;
+	export let centered = false;
 
 	let bannerExpanded = false;
 
