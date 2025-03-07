@@ -223,9 +223,10 @@
 	};
 
 	const chatEventHandler = async (event, cb) => {
-		// console.debug(event);
+		console.debug('Steven2CustomText: ', event);
 
 		if (event.chat_id === $chatId) {
+			console.debug('WithinFirst If: ', event);
 			await tick();
 			let message = history.messages[event.message_id];
 
@@ -234,6 +235,7 @@
 				const data = event?.data?.data ?? null;
 
 				if (type === 'status') {
+					console.debug('Hithere: Within type equals status if');
 					if (message?.statusHistory) {
 						message.statusHistory.push(data);
 					} else {
@@ -1061,6 +1063,7 @@
 	};
 
 	const chatCompletionEventHandler = async (data, message, chatId) => {
+		console.debug('NateChatComplete-io: ', chatId);
 		const { id, done, choices, content, sources, selected_model_id, error, usage } = data;
 
 		if (error) {

@@ -323,9 +323,10 @@ if SAFE_MODE:
     print("SAFE MODE ENABLED")
     Functions.deactivate_all_functions()
 
-logging.basicConfig(stream=sys.stdout, level=GLOBAL_LOG_LEVEL)
+# maybe change stream to standard error and check
+logging.basicConfig(stream=sys.stderr, level=GLOBAL_LOG_LEVEL)
 log = logging.getLogger(__name__)
-log.setLevel(SRC_LOG_LEVELS["MAIN"])
+log.setLevel(logging.DEBUG)
 
 
 class SPAStaticFiles(StaticFiles):
@@ -729,6 +730,12 @@ async def inspect_websocket(request: Request, call_next):
         upgrade = (request.headers.get("Upgrade") or "").lower()
         connection = (request.headers.get("Connection") or "").lower().split(",")
         # Check that there's the correct headers for an upgrade, else reject the connection
+
+        # log url path query params and headers here
+        log.error("StevenMiddlewareLogs:", request.headers)
+        log.error("Steven2MiddlewareLogs:", request.query_params)
+        log.error("Steven2MiddlewareLogs:", request.url.path)
+
         # This is to work around this upstream issue: https://github.com/miguelgrinberg/python-engineio/issues/367
         if upgrade != "websocket" or "upgrade" not in connection:
             return JSONResponse(
