@@ -116,7 +116,7 @@ def main():
     print(pr_description)
     print("✨ Check out the suggested PR description above ✨\n")
     current_branch = get_current_branch()
-    target_branch = "main"
+    target_branch = "origin/main"
 
     print(f"Creating PR from {current_branch} into {target_branch}...")
 
