@@ -116,7 +116,24 @@ def main():
     print(pr_description)
     print("✨ Check out the suggested PR description above ✨\n")
     current_branch = get_current_branch()
-    target_branch = "origin/main"
+    target_branch = "main"
+
+    print(f"Creating PR from {current_branch} into {target_branch}...")
+
+    # Get repo information to be explicit
+    repo_url_result = subprocess.run(
+        ["git", "config", "--get", "remote.origin.url"], capture_output=True, text=True
+    )
+    repo_url = repo_url_result.stdout.strip()
+
+    # Extract owner/repo format from git URL
+    # Works for both SSH (git@github.com:owner/repo.git) and HTTPS (https://github.com/owner/repo.git)
+    if "github.com:" in repo_url:
+        repo_path = repo_url.split("github.com:")[1].split(".git")[0]
+    else:
+        repo_path = repo_url.split("github.com/")[1].split(".git")[0]
+
+    print(f"Using repository: {repo_path}")
 
     print(f"Creating PR from {current_branch} into {target_branch}...")
 
@@ -130,9 +147,11 @@ def main():
             "--body",
             pr_description,
             "--base",
-            target_branch,
+            f"origin/{target_branch}",  # More explicit reference to remote branch
             "--head",
             current_branch,
+            "--repo",
+            repo_path,  # Explicit repository specification
         ],
         capture_output=True,
         text=True,
