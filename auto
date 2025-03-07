@@ -1,0 +1,15 @@
+#!/bin/bash
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+    DIR="$(cd -P "$(dirname "$SOURCE")" &>/dev/null && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" &>/dev/null && pwd)"
+echo "$SCRIPT_DIR"
+
+# Activate the virtual environment (adjust the path if needed)
+source "$SCRIPT_DIR/venv/bin/activate"
+
+# Run the Python script and pass along any arguments
+python "$SCRIPT_DIR/auto.py" "$@"
