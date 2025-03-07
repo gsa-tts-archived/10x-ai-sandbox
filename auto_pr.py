@@ -118,7 +118,7 @@ def main():
     current_branch = get_current_branch()
     target_branch = "main"
 
-    print("Creating PR from {current_branch} into {target_branch}...")
+    print(f"Creating PR from {current_branch} into {target_branch}...")
 
     result = subprocess.run(
         [
