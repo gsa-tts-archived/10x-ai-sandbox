@@ -147,11 +147,11 @@ def main():
             "--body",
             pr_description,
             "--base",
-            f"origin/{target_branch}",  # More explicit reference to remote branch
+            target_branch,
             "--head",
             current_branch,
             "--repo",
-            repo_path,  # Explicit repository specification
+            repo_path,
         ],
         capture_output=True,
         text=True,
