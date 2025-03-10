@@ -31,4 +31,6 @@ applications:
       RAG_OPENAI_API_BASE_URL: ((RAG_OPENAI_API_BASE_URL))
       RAG_OPENAI_API_KEY: ((RAG_OPENAI_API_KEY))
       RAG_EMBEDDING_ENGINE: ((RAG_EMBEDDING_ENGINE))
+      DEPLOY_ROUTE: ((DEPLOY_ROUTE))
+      DEPLOY_ENV: ((DEPLOY_ENV))
     command: ./backend/start.sh
