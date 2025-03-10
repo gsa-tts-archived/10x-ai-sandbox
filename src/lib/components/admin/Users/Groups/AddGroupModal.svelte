@@ -76,11 +76,12 @@
 					<div class="px-1 flex flex-col w-full">
 						<div class="flex gap-2">
 							<div class="flex flex-col w-full">
-								<div class=" mb-0.5 text-xs text-gray-500">{$i18n.t('Name')}</div>
+								<label for="add-group-name" class=" mb-0.5 text-sm text-gray-700">{$i18n.t('Name')}</label>
 
 								<div class="flex-1">
 									<input
-										class="w-full text-sm bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-700 outline-none"
+										id="add-group-name"
+										class="p-2 border rounded-md border-gray-400 w-full text-sm bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-700"
 										type="text"
 										bind:value={name}
 										placeholder={$i18n.t('Group Name')}
@@ -92,11 +93,12 @@
 						</div>
 
 						<div class="flex flex-col w-full mt-2">
-							<div class=" mb-1 text-xs text-gray-500">{$i18n.t('Description')}</div>
+							<label for="add-group-description" class=" mb-1 text-sm text-gray-700">{$i18n.t('Description')}</label>
 
 							<div class="flex-1">
 								<Textarea
-									className="w-full text-sm bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-700 outline-none resize-none"
+									id="add-group-description"
+									className="p-2 border rounded-md border-gray-400 w-full text-sm bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-700"
 									rows={2}
 									bind:value={description}
 									placeholder={$i18n.t('Group Description')}
