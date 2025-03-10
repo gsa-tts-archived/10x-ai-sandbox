@@ -504,11 +504,27 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
 
 @router.get("/signout")
 async def signout(request: Request, response: Response):
-    response.delete_cookie("token")
+    response.delete_cookie(
+        key="token",
+        path="/",
+        httponly=True,
+        samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
+        secure=WEBUI_SESSION_COOKIE_SECURE,
+    )
+    response.delete_cookie(
+        key="token",
+        path="/auth",
+        httponly=True,
+        samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
+        secure=WEBUI_SESSION_COOKIE_SECURE,
+    )
+    response.delete_cookie("session")
 
     if ENABLE_OAUTH_SIGNUP.value:
         oauth_id_token = request.cookies.get("oauth_id_token")
         if oauth_id_token:
+            response.delete_cookie("oauth_id_token")
+
             try:
                 async with ClientSession() as session:
                     async with session.get(OPENID_PROVIDER_URL.value) as resp:
@@ -526,7 +542,8 @@ async def signout(request: Request, response: Response):
                                 detail="Failed to fetch OpenID configuration",
                             )
             except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+                return RedirectResponse(url="/auth")
+                # raise HTTPException(status_code=500, detail=str(e))
 
     return {"status": True}
 

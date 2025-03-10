@@ -82,26 +82,30 @@
 	};
 
 	const checkOauthCallback = async () => {
-		if (!$page.url.hash) {
-			return;
+		let token = '';
+
+		if ($page.url.hash) {
+			const hash = $page.url.hash.substring(1);
+
+			if (hash) {
+				const params = new URLSearchParams(hash);
+				token = params.get('token') || '';
+			}
 		}
-		const hash = $page.url.hash.substring(1);
-		if (!hash) {
-			return;
-		}
-		const params = new URLSearchParams(hash);
-		const token = params.get('token');
-		if (!token) {
-			return;
-		}
+		// console log cookie
+		console.log(document.cookie);
+
 		const sessionUser = await getSessionUser(token).catch((error) => {
 			toast.error(error);
 			return null;
 		});
+
 		if (!sessionUser) {
 			return;
 		}
+
 		localStorage.token = token;
+
 		await setSessionUser(sessionUser);
 	};
 
