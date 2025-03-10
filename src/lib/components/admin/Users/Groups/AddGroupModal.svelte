@@ -76,7 +76,9 @@
 					<div class="px-1 flex flex-col w-full">
 						<div class="flex gap-2">
 							<div class="flex flex-col w-full">
-								<label for="add-group-name" class=" mb-0.5 text-sm text-gray-700">{$i18n.t('Name')}</label>
+								<label for="add-group-name" class=" mb-0.5 text-sm text-gray-700"
+									>{$i18n.t('Name')}</label
+								>
 
 								<div class="flex-1">
 									<input
@@ -93,7 +95,9 @@
 						</div>
 
 						<div class="flex flex-col w-full mt-2">
-							<label for="add-group-description" class=" mb-1 text-sm text-gray-700">{$i18n.t('Description')}</label>
+							<label for="add-group-description" class=" mb-1 text-sm text-gray-700"
+								>{$i18n.t('Description')}</label
+							>
 
 							<div class="flex-1">
 								<Textarea

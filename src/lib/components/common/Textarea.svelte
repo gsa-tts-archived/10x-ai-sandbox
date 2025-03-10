@@ -33,7 +33,7 @@
 </script>
 
 <textarea
-	id="{id}"
+	{id}
 	bind:this={textareaElement}
 	class="{className} whitespace-pre-wrap relative {value
 		? !value.trim()
