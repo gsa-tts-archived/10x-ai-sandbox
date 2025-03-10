@@ -172,7 +172,9 @@
 					<div class="px-1">
 						{#if tab === ''}
 							<div class="flex flex-col w-full">
-								<label for="add-user-role" class=" mb-1 text-sm text-gray-700">{$i18n.t('Role')}</label>
+								<label for="add-user-role" class=" mb-1 text-sm text-gray-700"
+									>{$i18n.t('Role')}</label
+								>
 
 								<div class="flex-1">
 									<select
@@ -208,7 +210,8 @@
 							<hr class=" border-gray-50 dark:border-gray-850 my-2.5 w-full" />
 
 							<div class="flex flex-col w-full">
-								<label for="add-email" class=" mb-1 text-sm text-gray-700">{$i18n.t('Email')}</label>
+								<label for="add-email" class=" mb-1 text-sm text-gray-700">{$i18n.t('Email')}</label
+								>
 
 								<div class="flex-1">
 									<input
@@ -223,7 +226,9 @@
 							</div>
 
 							<div class="flex flex-col w-full mt-1">
-								<label for="add-password" class=" mb-1 text-sm text-gray-700">{$i18n.t('Password')}</label>
+								<label for="add-password" class=" mb-1 text-sm text-gray-700"
+									>{$i18n.t('Password')}</label
+								>
 
 								<div class="flex-1">
 									<input
@@ -262,12 +267,12 @@
 									</button>
 								</div>
 
-								<div class=" text-xs text-gray-500">
+								<div class=" text-xs text-gray-700">
 									ⓘ {$i18n.t(
 										'Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.'
 									)}
 									<a
-										class="underline dark:text-gray-200"
+										class="underline dark:text-gray-700"
 										href="{WEBUI_BASE_URL}/static/user-import.csv"
 									>
 										{$i18n.t('Click here to download user import template file.')}
