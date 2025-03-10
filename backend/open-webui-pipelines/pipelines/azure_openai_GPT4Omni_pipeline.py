@@ -69,7 +69,8 @@ class Pipeline:
             "api-key": self.valves.AZURE_OPENAI_API_KEY,
             "Content-Type": "application/json",
         }
-
+        # "endpoint_url": "https://eastus.api.cognitive.microsoft.com/openai/deployments/gpt-4o",
+        # "model_name": "gpt-4o",
         url = (
             f"{self.valves.AZURE_OPENAI_ENDPOINT}/openai/deployments/"
             + f"{self.valves.AZURE_OPENAI_DEPLOYMENT_NAME}/chat/completions"
