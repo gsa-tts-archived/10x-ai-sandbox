@@ -6,7 +6,7 @@
 	import ShortcutsModal from '../chat/ShortcutsModal.svelte';
 	import Tooltip from '../common/Tooltip.svelte';
 	import HelpMenu from './Help/HelpMenu.svelte';
-	import HelpCircle from '../icons/HelpCircle.svelte';
+	import QuestionMarkCircle from '$lib/components/icons/QuestionMarkCircle.svelte';
 
 	let showShortcuts = false;
 </script>
@@ -32,7 +32,7 @@
 			<button
 				class="text-gray-600 dark:text-gray-300 bg-gray-300/20 flex items-center justify-center text-[0.7rem] rounded-full"
 			>
-				<HelpCircle className="size-6" />
+				<QuestionMarkCircle className="size-5" />
 			</button>
 		</Tooltip>
 	</HelpMenu>
