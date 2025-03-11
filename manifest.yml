@@ -10,6 +10,7 @@ applications:
     disk_quota: 7G
     routes:
       - route: ((DEPLOY_ROUTE)).app.cloud.gov
+    timeout: 180
     env:
       WEBUI_SECRET_KEY: ((WEBUI_SECRET_KEY))
       OLLAMA_BASE_URL: ((OLLAMA_BASE_URL))
