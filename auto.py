@@ -159,9 +159,9 @@ def create_pull_request():
                 f"Error creating PR from {current_branch} into {target_branch}:\n{result.stderr}",
                 file=sys.stderr,
             )
-        except:
+        except Exception as e:
             print(
-                f"Error creating PR from {current_branch} into {target_branch}:\n{result}",
+                f"Error {e} creating PR from {current_branch} into {target_branch}:\n{result}",
                 file=sys.stderr,
             )
         finally:
@@ -243,9 +243,9 @@ def create_commit():
                 f"Error creating commit:\n{result.stderr}",
                 file=sys.stderr,
             )
-        except:
+        except Exception as e:
             print(
-                f"Error creating commit:\n{result}",
+                f"Error {e} creating commit:\n{result}",
                 file=sys.stderr,
             )
         finally:
@@ -267,9 +267,9 @@ def push_commit():
                 f"Error pushing commit:\n{result.stderr}",
                 file=sys.stderr,
             )
-        except:
+        except Exception as e:
             print(
-                f"Error pushing commit:\n{result}",
+                f"Error {e} pushing commit:\n{result}",
                 file=sys.stderr,
             )
         finally:
