@@ -46,11 +46,12 @@
 			sortOrder = 'asc';
 		}
 	}
+	let headingId = 'user-chats-heading';
 </script>
 
-<Modal size="lg" bind:show>
+<Modal size="lg" {headingId} bind:show>
 	<div class=" flex justify-between dark:text-gray-300 px-5 pt-4">
-		<h2 class=" text-lg font-medium self-center capitalize">
+		<h2 class=" text-lg font-medium self-center capitalize" id={headingId}>
 			{$i18n.t("{{user}}'s Chats", { user: user.name })}
 		</h2>
 		<button

@@ -39,12 +39,14 @@
 			_user.password = '';
 		}
 	});
+
+	let headingId = 'edit-user-heading';
 </script>
 
-<Modal size="sm" bind:show>
+<Modal size="sm" {headingId} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-300 px-5 py-4">
-			<h2 class=" text-lg font-medium self-center">{$i18n.t('Edit User')}</h2>
+			<h2 class=" text-lg font-medium self-center" id={headingId}>{$i18n.t('Edit User')}</h2>
 			<button
 				class="self-center"
 				on:click={() => {

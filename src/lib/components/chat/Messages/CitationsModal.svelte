@@ -44,12 +44,14 @@
 			);
 		}
 	}
+
+	let headingId = 'citations-heading';
 </script>
 
-<Modal size="lg" bind:show>
+<Modal size="lg" {headingId} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-2">
-			<h2 class=" text-lg font-medium self-center capitalize">
+			<h2 class=" text-lg font-medium self-center capitalize" id={headingId}>
 				{$i18n.t('Citation')}
 			</h2>
 			<button

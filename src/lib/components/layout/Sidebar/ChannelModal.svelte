@@ -66,18 +66,20 @@
 
 		show = false;
 	};
+
+	let headingId = 'channel-modal-heading';
 </script>
 
-<Modal size="sm" bind:show>
+<Modal size="sm" {headingId} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-1">
-			<div class=" text-lg font-medium self-center">
+			<h2 class=" text-lg font-medium self-center" id={headingId}>
 				{#if edit}
 					{$i18n.t('Edit Channel')}
 				{:else}
 					{$i18n.t('Create Channel')}
 				{/if}
-			</div>
+			</h2>
 			<button
 				class="self-center"
 				on:click={() => {
@@ -89,6 +91,8 @@
 					viewBox="0 0 20 20"
 					fill="currentColor"
 					class="w-5 h-5"
+					role="img"
+					aria-label="close"
 				>
 					<path
 						fill-rule="evenodd"

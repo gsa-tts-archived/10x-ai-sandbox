@@ -63,6 +63,8 @@
 			chats = await getArchivedChatList(localStorage.token);
 		})();
 	}
+
+	let headingId = 'archived-chats-heading';
 </script>
 
 <UnarchiveAllConfirmDialog
@@ -74,10 +76,10 @@
 	}}
 />
 
-<Modal size="lg" bind:show>
+<Modal size="lg" {headingId} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-1">
-			<h2 class=" text-lg font-medium self-center">{$i18n.t('Archived Chats')}</h2>
+			<h2 class=" text-lg font-medium self-center" id={headingId}>{$i18n.t('Archived Chats')}</h2>
 			<button
 				class="self-center"
 				on:click={() => {

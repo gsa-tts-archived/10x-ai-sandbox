@@ -10,12 +10,14 @@
 
 	export let show = false;
 	export let manifest = {};
+
+	let headingId = 'manifest-modal-heading';
 </script>
 
-<Modal size="sm" bind:show>
+<Modal size="sm" {headingId} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-2">
-			<h2 class=" text-lg font-medium self-center">{$i18n.t('Show your support!')}</h2>
+			<h2 class=" text-lg font-medium self-center" id={headingId}>{$i18n.t('Show your support!')}</h2>
 			<button
 				class="self-center"
 				on:click={() => {

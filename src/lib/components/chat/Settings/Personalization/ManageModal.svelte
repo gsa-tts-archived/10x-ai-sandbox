@@ -30,12 +30,14 @@
 			loading = false;
 		})();
 	}
+
+	let headingId = 'manage-memory-heading';
 </script>
 
-<Modal size="xl" bind:show>
+<Modal size="xl"{headingId} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-1">
-			<h2 class=" text-lg font-medium self-center">{$i18n.t('Memory')}</h2>
+			<h2 class=" text-lg font-medium self-center" id={headingId}>{$i18n.t('Memory')}</h2>
 			<button
 				class="self-center"
 				on:click={() => {

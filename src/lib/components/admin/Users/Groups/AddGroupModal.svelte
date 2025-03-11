@@ -35,12 +35,14 @@
 	onMount(() => {
 		console.log('mounted');
 	});
+
+	let headingId = 'add-group-heading';
 </script>
 
-<Modal size="sm" bind:show>
+<Modal size="sm" {headingId} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-100 px-5 pt-4 mb-1.5">
-			<h2 class=" text-lg font-medium self-center font-primary">
+			<h2 class=" text-lg font-medium self-center font-primary" id={headingId}>
 				{$i18n.t('Add User Group')}
 			</h2>
 			<button

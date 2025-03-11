@@ -113,12 +113,14 @@
 	onMount(() => {
 		initModel();
 	});
+
+	let headingID = 'arena-model-heading';
 </script>
 
-<Modal size="sm" bind:show>
+<Modal size="sm" {headingID} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-100 px-5 pt-4 pb-2">
-			<h2 class=" text-lg font-medium self-center font-primary">
+			<h2 class=" text-lg font-medium self-center font-primary" id={headingID}>
 				{#if edit}
 					{$i18n.t('Edit Arena Model')}
 				{:else}
