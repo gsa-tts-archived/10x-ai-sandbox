@@ -71,7 +71,7 @@ And here's the template:
 <pr_template>
 {get_pr_template()}
 </pr_template>
-Please provide your response in the following format:
+The PR title should begin with one of the following in all caps: [BUGFIX, FEATURE, TASK, DEVOPS, INFRA, DOCS]. Please provide your response in the following format:
 <pr_title>
 ...title
 </pr_title>
