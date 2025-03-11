@@ -36,7 +36,7 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME is set to: $AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME"
 
     export AZURE_OPENAI_API_KEY=$(vcap_get_service anna-gpt-4o .credentials.api_key)
-    echo "AZURE_OPENAI_API_KEY is set to: $AZURE_OPENAI_API_KEY"
+    echo "AZURE_OPENAI_API_KEY is set to: $(echo $AZURE_OPENAI_API_KEY | sed 's/^\(....\).*$/\1****/')"
 
     echo "PATH is set to: $PATH"
     echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
