@@ -20,7 +20,10 @@ if [ -n "$VCAP_APPLICATION" ]; then
         echo "$VCAP_SERVICES" | jq --raw-output --arg service_name "$name" ".[][] | select(.name == \$service_name) | $path"
     }
 
-    export endpoint_url=$(vcap_get_service anna-gpt-4o .credentials.endpoint_url)
+    # TKTK - The service name should be configurable
+    export VCAP_SERVICE_NAME_AZURE_AI_GPT4O="azure-ai-gpt-4o"
+
+    export endpoint_url=$(vcap_get_service $VCAP_SERVICE_NAME_AZURE_AI_GPT4O .credentials.endpoint_url)
 
     echo "endpoint_url is set to: $endpoint_url"
 
@@ -32,10 +35,10 @@ if [ -n "$VCAP_APPLICATION" ]; then
     export AZURE_OPENAI_ENDPOINT=$(trim_url "$endpoint_url") 
     echo "AZURE_OPENAI_ENDPOINT is set to: $AZURE_OPENAI_ENDPOINT"  
 
-    export AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME=$(vcap_get_service anna-gpt-4o .credentials.model_name)
+    export AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME=$(vcap_get_service $VCAP_SERVICE_NAME_AZURE_AI_GPT4O .credentials.model_name)
     echo "AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME is set to: $AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME"
 
-    export AZURE_OPENAI_API_KEY=$(vcap_get_service anna-gpt-4o .credentials.api_key)
+    export AZURE_OPENAI_API_KEY=$(vcap_get_service $VCAP_SERVICE_NAME_AZURE_AI_GPT4O .credentials.api_key)
     echo "AZURE_OPENAI_API_KEY is set to: $(echo $AZURE_OPENAI_API_KEY | sed 's/^\(....\).*$/\1****/')"
 
     echo "PATH is set to: $PATH"
