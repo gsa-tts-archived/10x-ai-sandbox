@@ -22,7 +22,13 @@
 	let headingId = 'add-text-content-heading';
 </script>
 
-<Modal size="full" {headingId} containerClassName="" className="h-full bg-white dark:bg-gray-900" bind:show>
+<Modal
+	size="full"
+	{headingId}
+	containerClassName=""
+	className="h-full bg-white dark:bg-gray-900"
+	bind:show
+>
 	<div class="absolute top-0 right-0 p-5">
 		<button
 			aria-label="close"
