@@ -44,7 +44,7 @@
 					);
 				}}
 			>
-				<InfoCircle className="size-5" strokeWidth="2"/>
+				<InfoCircle className="size-5" strokeWidth="2" />
 				<div class="flex items-center">{$i18n.t('Documentation')}</div>
 			</DropdownMenu.Item>
 
