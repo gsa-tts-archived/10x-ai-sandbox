@@ -5,4 +5,4 @@
 </script>
 
 <Chat {mainContentId} />
-<Help />
+
