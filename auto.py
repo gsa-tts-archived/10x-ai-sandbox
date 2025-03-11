@@ -19,9 +19,25 @@ def get_latest_commit():
 
 
 def get_branch_diff():
-    print("Getting the diff...\n")
+    print("Getting the diff that will be merged into main...\n")
+
+    # First, fetch the latest from origin to ensure we have current data
+    subprocess.run(["git", "fetch", "origin"], capture_output=True, text=True)
+
+    # Find the merge base (common ancestor) between main and current branch
+    merge_base_result = subprocess.run(
+        ["git", "merge-base", "origin/main", "HEAD"], capture_output=True, text=True
+    )
+    if merge_base_result.returncode != 0:
+        print("Error finding merge base", file=sys.stderr)
+        sys.exit(1)
+
+    merge_base = merge_base_result.stdout.strip()
+
+    # Get the diff between merge-base and current branch HEAD
+    # This shows only what your branch adds compared to where it branched from main
     result = subprocess.run(
-        ["git", "diff", "main", "HEAD"], capture_output=True, text=True
+        ["git", "diff", merge_base, "HEAD"], capture_output=True, text=True
     )
     if result.returncode != 0:
         print("Error getting the diff", file=sys.stderr)
