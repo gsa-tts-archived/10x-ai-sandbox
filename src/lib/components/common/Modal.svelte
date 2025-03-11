@@ -7,6 +7,7 @@
 
 	export let show = true;
 	export let size = 'md';
+	export let headingId = '';
 
 	export let containerClassName = 'p-3';
 	export let className = 'bg-gray-50 dark:bg-gray-900 rounded-2xl';
@@ -88,7 +89,13 @@
 				e.stopPropagation();
 			}}
 		>
-			<div id="modal-content">
+			<div
+				id="modal-content"
+				role="dialog"
+				aria-modal="true"
+				tabindex="-1"
+				aria-labelledby={headingId}
+			>
 				<slot />
 			</div>
 		</div>

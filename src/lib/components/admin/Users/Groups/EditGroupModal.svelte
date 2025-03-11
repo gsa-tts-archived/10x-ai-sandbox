@@ -92,12 +92,14 @@
 		selectedTab = tabs[0];
 		init();
 	});
+
+	let headingId = 'edit-group-heading';
 </script>
 
-<Modal size="md" bind:show>
+<Modal size="md" {headingId} bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-100 px-5 pt-4 mb-1.5">
-			<h2 class=" text-lg font-medium self-center font-primary">
+			<h2 class=" text-lg font-medium self-center font-primary" id={headingId}>
 				{#if custom}
 					{#if edit}
 						{$i18n.t('Edit User Group')}
