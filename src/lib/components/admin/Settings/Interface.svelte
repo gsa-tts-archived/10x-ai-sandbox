@@ -30,7 +30,8 @@
 		ENABLE_TAGS_GENERATION: true,
 		ENABLE_SEARCH_QUERY_GENERATION: true,
 		ENABLE_RETRIEVAL_QUERY_GENERATION: true,
-		QUERY_GENERATION_PROMPT_TEMPLATE: ''
+		QUERY_GENERATION_PROMPT_TEMPLATE: '',
+		DEFAULT_PROMPT_SUGGESTIONS: []
 	};
 
 	let promptSuggestions = [];
@@ -48,7 +49,7 @@
 	onMount(async () => {
 		taskConfig = await getTaskConfig(localStorage.token);
 
-		promptSuggestions = $config?.default_prompt_suggestions;
+		promptSuggestions = taskConfig.DEFAULT_PROMPT_SUGGESTIONS;
 		banners = await getBanners(localStorage.token);
 	});
 
@@ -330,7 +331,7 @@
 				</div>
 			</div>
 
-			{#if $user.role === 'admin'}
+			{#if $user.role === 'admin' && $config?.features?.enable_prompt_suggestions}
 				<div class=" space-y-3">
 					<div class="flex w-full justify-between mb-2">
 						<div class=" self-center text-sm font-semibold">
@@ -370,14 +371,7 @@
 											placeholder={$i18n.t('Title (e.g. Tell me a fun fact)')}
 											bind:value={prompt.title[0]}
 										/>
-
-										<input
-											class="px-3 py-1.5 text-xs w-full bg-transparent outline-none border-r border-gray-100 dark:border-gray-800"
-											placeholder={$i18n.t('Subtitle (e.g. about the Roman Empire)')}
-											bind:value={prompt.title[1]}
-										/>
 									</div>
-
 									<textarea
 										class="px-3 py-1.5 text-xs w-full bg-transparent outline-none border-r border-gray-100 dark:border-gray-800 resize-none"
 										placeholder={$i18n.t('Prompt (e.g. Tell me a fun fact about the Roman Empire)')}

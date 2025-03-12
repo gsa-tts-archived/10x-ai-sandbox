@@ -201,6 +201,7 @@ type Config = {
 		allow_simultaneous_models: boolean;
 		enable_chat_controls: boolean;
 		default_show_changelog: boolean;
+		enable_set_as_default_model: boolean;
 		enable_active_users_count: boolean;
 		enable_admin_feedbacks: boolean;
 		enable_more_inputs: boolean;
@@ -212,6 +213,9 @@ type Config = {
 		enable_floating_buttons: boolean;
 		enable_delete_button: boolean;
 		enable_model_selector_search: boolean;
+		enable_sidebar_user_profile: boolean;
+		enable_message_input_logo: boolean;
+		enable_prompt_suggestions: boolean;
 	};
 	oauth: {
 		providers: {
