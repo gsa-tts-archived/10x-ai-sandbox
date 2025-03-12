@@ -787,7 +787,7 @@
 							{/if}
 
 							{#if message.done}
-								{#if !readOnly}
+								{#if !readOnly && $config?.features?.enable_response_prompt_edit}
 									{#if $user.role === 'user' ? ($user?.permissions?.chat?.edit ?? true) : true}
 										<Tooltip content={$i18n.t('Edit')} placement="bottom">
 											<button
@@ -1120,7 +1120,7 @@
 										</button>
 									</Tooltip>
 
-									{#if isLastMessage}
+									{#if isLastMessage && $config?.features?.enable_response_continue}
 										<Tooltip content={$i18n.t('Continue Response')} placement="bottom">
 											<button
 												type="button"
