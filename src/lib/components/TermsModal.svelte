@@ -12,6 +12,8 @@
 
 	export let show = false;
 
+	let headingId = 'terms-heading';
+
 	async function acceptTerms() {
 		await settings.set({ ...$settings, ...{ acceptedTermsVersion: TERMS_VERSION } });
 		await updateUserSettings(localStorage.token, { ui: $settings });
@@ -19,66 +21,67 @@
 	}
 </script>
 
-<Modal bind:show allowEasyDismiss={false}>
-	<div role="dialog" aria-labelledby="terms-heading" aria-modal="true" tabindex="-1">
-		<div class="px-5 pt-4">
-			<h2 id="terms-heading" class="text-xl text-[#00538E] font-semibold">
-				Welcome{$user?.name ? ` ${$user.name}` : ''}! <span class="sr-only">Please review and accept the terms and conditions before proceeding.</span>
-			</h2>
-		</div>
+<Modal bind:show allowEasyDismiss={false} {headingId}>
+	<div class="px-5 pt-4">
+		<h2 id={headingId} class="text-xl text-[#00538E] font-semibold">
+			Welcome{$user?.name ? ` ${$user.name}` : ''}!
+			<span class="sr-only"
+				>Please review and accept the terms and conditions before proceeding.</span
+			>
+		</h2>
+	</div>
 
-		<div class="w-full p-4 px-5 text-gray-700 dark:text-gray-100">
-			<div class="overflow-y-scroll max-h-100 scrollbar-hidden">
-				<div class="mb-3">
-					<p class="my-2 font-semibold">
-						GSA Intelligence is the platform for GSA's AI chatbot. You can use GSA Chat to help you
-						write and edit documents, summarize information, research a topic, and more.
-					</p>
-					<p class="my-2 font-semibold">
-						By using GSA Chat, you understand and agree to the following:
-					</p>
-					<ul class="terms-list list-none p-0">
-						<li>
-							All prompts and responses will be logged. Your data will be protected and only be used
-							to improve and further refine the GSA Chat platform.
-						</li>
-						<li>
-							GSA's <a
-								class="underline"
-								target="_blank"
-								href="https://insite.gsa.gov/directives-library/gsa-information-technology-it-general-rules-of-behavior-4"
-								>IT Rules of Behavior</a
-							>
-							and
-							<a
-								class="underline"
-								target="_blank"
-								href="https://insite.gsa.gov/directives-library/use-of-artificial-intelligence-at-gsa"
-								>AI Directive</a
-							> prohibit using the chatbot for harm or inappropriately.
-						</li>
-						<li>
-							The chatbot may occasionally generate incorrect or misleading information. It is not
-							intended to give professional advice (e.g., legal, medical, financial). Please
-							carefully review its answers.
-						</li>
-					</ul>
-					<p class="my-2 font-semibold">
-						If you have any feedback, need further assistance, or have an issue, please reach out to
-						the team at <a class="underline" target="_blank" href="mailto:chat@gsa.gov"
-							>chat@gsa.gov</a
-						>.
-					</p>
-				</div>
+	<div class="w-full p-4 px-5 text-gray-700 dark:text-gray-100">
+		<div class="overflow-y-scroll max-h-100 scrollbar-hidden">
+			<div class="mb-3">
+				<p class="my-2 font-semibold">
+					GSA Intelligence is the platform for GSA's AI chatbot. You can use GSA Chat to help you
+					write and edit documents, summarize information, research a topic, and more.
+				</p>
+				<p class="my-2 font-semibold">
+					By using GSA Chat, you understand and agree to the following:
+				</p>
+				<ul class="terms-list list-none p-0">
+					<li>
+						All prompts and responses will be logged. Your data will be protected and only be used
+						to improve and further refine the GSA Chat platform.
+					</li>
+					<li>
+						GSA's <a
+							class="underline"
+							target="_blank"
+							href="https://insite.gsa.gov/directives-library/gsa-information-technology-it-general-rules-of-behavior-4"
+							>IT Rules of Behavior</a
+						>
+						and
+						<a
+							class="underline"
+							target="_blank"
+							href="https://insite.gsa.gov/directives-library/use-of-artificial-intelligence-at-gsa"
+							>AI Directive</a
+						> prohibit using the chatbot for harm or inappropriately.
+					</li>
+					<li>
+						The chatbot may occasionally generate incorrect or misleading information. It is not
+						intended to give professional advice (e.g., legal, medical, financial). Please carefully
+						review its answers.
+					</li>
+				</ul>
+				<p class="my-2 font-semibold">
+					If you have any feedback, need further assistance, or have an issue, please reach out to
+					the team at <a class="underline" target="_blank" href="mailto:chat@gsa.gov"
+						>chat@gsa.gov</a
+					>.
+				</p>
 			</div>
-			<div class="flex justify-end pt-3 text-sm font-medium">
-				<button
-					on:click={acceptTerms}
-					class=" px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-gray-100 transition rounded-lg"
-				>
-					<span class="relative">Agree and continue</span>
-				</button>
-			</div>
+		</div>
+		<div class="flex justify-end pt-3 text-sm font-medium">
+			<button
+				on:click={acceptTerms}
+				class=" px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-gray-100 transition rounded-lg"
+			>
+				<span class="relative">Agree and continue</span>
+			</button>
 		</div>
 	</div>
 </Modal>
