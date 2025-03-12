@@ -19,7 +19,8 @@
 		temporaryChatEnabled,
 		channels,
 		socket,
-		config
+		config,
+		WEBUI_NAME
 	} from '$lib/stores';
 	import { onMount, getContext, tick, onDestroy } from 'svelte';
 
@@ -55,7 +56,7 @@
 	import { getChannels, createNewChannel } from '$lib/apis/channels';
 	import ChannelModal from './Sidebar/ChannelModal.svelte';
 	import ChannelItem from './Sidebar/ChannelItem.svelte';
-	import PencilSquare from '../icons/PencilSquare.svelte';
+	import NewChatIcon from '../icons/NewChatIcon.svelte';
 
 	const BREAKPOINT = 768;
 
@@ -492,21 +493,21 @@
 				}}
 			>
 				<div class="flex items-center">
-					<div class="self-center mx-1.5">
+					<div class="self-center">
 						<img
 							crossorigin="anonymous"
 							src="{WEBUI_BASE_URL}/static/favicon.png"
 							class=" size-5 -translate-x-1.5 rounded-full"
-							alt="logo"
+							alt={$WEBUI_NAME}
 						/>
 					</div>
-					<div class=" self-center font-medium text-sm text-gray-850 dark:text-white font-primary">
-						{$i18n.t('New Chat')}
+					<div class=" self-center font-medium text-2xl text-gray-850 dark:text-white font-primary">
+						{$i18n.t('Chat')}
 					</div>
 				</div>
 
 				<div>
-					<PencilSquare className=" size-5" strokeWidth="2" />
+					<NewChatIcon className=" size-5" strokeWidth="2" />
 				</div>
 			</a>
 		</div>
@@ -554,25 +555,27 @@
 			{#if $temporaryChatEnabled}
 				<div class="absolute z-40 w-full h-full flex justify-center"></div>
 			{/if}
-
-			<SearchInput
-				bind:value={search}
-				on:input={searchDebounceHandler}
-				placeholder={$i18n.t('Search')}
-			/>
-
-			<div class="absolute z-40 right-3.5 top-1">
-				<Tooltip content={$i18n.t('New folder')}>
-					<button
-						class="p-1 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-950 dark:hover:bg-gray-900 text-gray-500 dark:text-gray-500 transition"
-						on:click={() => {
-							createFolder();
-						}}
-					>
-						<Plus className=" size-3" strokeWidth="2.5" />
-					</button>
-				</Tooltip>
-			</div>
+			{#if $config?.features?.enable_sidebar_search}
+				<SearchInput
+					bind:value={search}
+					on:input={searchDebounceHandler}
+					placeholder={$i18n.t('Search')}
+				/>
+			{/if}
+			{#if $config?.features?.enable_sidebar_create_folder}
+				<div class="absolute z-40 right-3.5 top-1">
+					<Tooltip content={$i18n.t('New folder')}>
+						<button
+							class="p-1 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-950 dark:hover:bg-gray-900 text-gray-500 dark:text-gray-500 transition"
+							on:click={() => {
+								createFolder();
+							}}
+						>
+							<Plus className=" size-3" strokeWidth="2.5" />
+						</button>
+					</Tooltip>
+				</div>
+			{/if}
 		</div>
 
 		<div
@@ -836,7 +839,7 @@
 
 		<div class="px-2">
 			<div class="flex flex-col font-primary">
-				{#if $user !== undefined}
+				{#if $user !== undefined && $config?.features?.enable_sidebar_user_profile}
 					<UserMenu
 						role={$user.role}
 						on:show={(e) => {
