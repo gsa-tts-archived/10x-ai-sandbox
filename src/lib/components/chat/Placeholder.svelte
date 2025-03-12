@@ -93,7 +93,7 @@
 			className="w-full flex justify-center mb-0.5"
 			placement="top"
 		>
-			<div class="flex items-center gap-2 text-gray-500 font-medium text-lg my-2 w-fit">
+			<div class="flex items-center gap-2 text-gray-600 font-medium text-lg my-2 w-fit">
 				<EyeSlash strokeWidth="2.5" className="size-5" /> Temporary Chat
 			</div>
 		</Tooltip>
@@ -153,7 +153,7 @@
 							placement="top"
 						>
 							<div
-								class="mt-0.5 px-2 text-sm font-normal text-gray-500 dark:text-gray-400 line-clamp-2 max-w-xl markdown"
+								class="mt-0.5 px-2 text-sm font-normal text-gray-600 dark:text-gray-400 line-clamp-2 max-w-xl markdown"
 							>
 								{@html marked.parse(
 									sanitizeResponseContent(models[selectedModelIdx]?.info?.meta?.description)

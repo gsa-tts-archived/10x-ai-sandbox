@@ -45,7 +45,7 @@
 					>
 						{prompt.content}
 					</div>
-					<div class="text-xs text-gray-500 font-normal line-clamp-1">Prompt</div>
+					<div class="text-xs text-gray-600 font-normal line-clamp-1">Prompt</div>
 				{/if}
 			</div>
 		</button>
