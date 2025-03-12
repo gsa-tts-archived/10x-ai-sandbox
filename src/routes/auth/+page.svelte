@@ -468,7 +468,7 @@
 			</div>
 
 			<Identifier
-				logo="/static/gsa_logo.svg"
+				logo="/static/gsa-logo.svg"
 				domain="chat.gsa.gov"
 				agency="U.S. General Services Administration"
 				agencyLink="https://www.gsa.gov/"
