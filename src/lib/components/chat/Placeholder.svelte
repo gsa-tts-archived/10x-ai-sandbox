@@ -126,8 +126,8 @@
 												($i18n.language === 'dg-DG'
 													? `/doge.png`
 													: `${WEBUI_BASE_URL}/static/gsai.png`)}
-											class=" w-16 sm:w-20 h-fit"
-											alt="GSAI"
+											class=" w-16 sm:w-20"
+											alt=""
 											draggable="false"
 										/>
 									</button>
@@ -209,16 +209,18 @@
 			</div>
 		</div>
 	</div>
-	<div class="mx-auto max-w-3xl font-primary px-8" in:fade={{ duration: 200, delay: 200 }}>
-		<div class="mx-1">
-			<Suggestions
-				suggestionPrompts={models[selectedModelIdx]?.info?.meta?.suggestion_prompts ??
-					$config?.default_prompt_suggestions ??
-					[]}
-				on:select={(e) => {
-					selectSuggestionPrompt(e.detail);
-				}}
-			/>
+	{#if $config?.features?.enable_prompt_suggestions}
+		<div class="mx-auto max-w-3xl font-primary px-8" in:fade={{ duration: 200, delay: 200 }}>
+			<div class="mx-1">
+				<Suggestions
+					suggestionPrompts={models[selectedModelIdx]?.info?.meta?.suggestion_prompts ??
+						$config?.default_prompt_suggestions ??
+						[]}
+					on:select={(e) => {
+						selectSuggestionPrompt(e.detail);
+					}}
+				/>
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>

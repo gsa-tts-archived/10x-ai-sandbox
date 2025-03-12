@@ -13,11 +13,11 @@ class Pipeline:
         BEDROCK_CLAUDE_ARN: Optional[str]
 
     def __init__(self):
-        self.name = "Claude Sonnet 3.5 v2"
+        self.name = "Claude Sonnet 3.7"
         self.valves = self.Valves(
             **{
                 "AWS_REGION": os.getenv("AWS_REGION", "us-east-1"),
-                "BEDROCK_CLAUDE_ARN": os.getenv("BEDROCK_CLAUDE_SONNET_35_ARN", None),
+                "BEDROCK_CLAUDE_ARN": os.getenv("BEDROCK_CLAUDE_SONNET_37_ARN", None),
             }
         )
         self.bedrock_client = bedrock_client
