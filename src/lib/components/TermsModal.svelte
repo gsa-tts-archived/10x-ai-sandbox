@@ -43,21 +43,35 @@
 					<li>Research a common topic</li>
 				</ul>
 				<p class="my-2 font-semibold">
-					When using Chat, you need to understand and agree to our <a href="https://insite.gsa.gov/services-and-offices/staff-offices/office-of-gsa-it/artificial-intelligence/gsas-aipowered-chat/chat-resources/chat-privacy-policy">privacy policy</a>, which covers the following:
+					When using Chat, you need to understand and agree to our <a
+						href="https://insite.gsa.gov/services-and-offices/staff-offices/office-of-gsa-it/artificial-intelligence/gsas-aipowered-chat/chat-resources/chat-privacy-policy"
+						>privacy policy</a
+					>, which covers the following:
 				</p>
 				<ul class="terms-list list-none p-0">
 					<li>
-						All prompts and responses will be logged. Your data will be protected and used only to improve and further refine Chat.
+						All prompts and responses will be logged. Your data will be protected and used only to
+						improve and further refine Chat.
 					</li>
 					<li>
-						GSA's <a href="https://insite.gsa.gov/directives-library/gsa-information-technology-it-general-rules-of-behavior-4">IT Rules of Behavior</a> and <a href="https://insite.gsa.gov/directives-library/use-of-artificial-intelligence-at-gsa">AI Directive</a> prohibit using Chat inappropriately or for harmful purposes.
+						GSA's <a
+							href="https://insite.gsa.gov/directives-library/gsa-information-technology-it-general-rules-of-behavior-4"
+							>IT Rules of Behavior</a
+						>
+						and
+						<a
+							href="https://insite.gsa.gov/directives-library/use-of-artificial-intelligence-at-gsa"
+							>AI Directive</a
+						> prohibit using Chat inappropriately or for harmful purposes.
 					</li>
 					<li>
-						Chat may generate incorrect or misleading information. Please carefully review its responses.
+						Chat may generate incorrect or misleading information. Please carefully review its
+						responses.
 					</li>
 				</ul>
 				<p class="my-2 font-semibold">
-					If you have any feedback, need further assistance, or have an issue, please reach out to the team at <a href="mailto:chat@gsa.gov">chat@gsa.gov</a>.
+					If you have any feedback, need further assistance, or have an issue, please reach out to
+					the team at <a href="mailto:chat@gsa.gov">chat@gsa.gov</a>.
 				</p>
 			</div>
 		</div>
