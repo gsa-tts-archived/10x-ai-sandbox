@@ -208,6 +208,7 @@ from open_webui.config import (
     ENABLE_MESSAGE_RATING,
     ALLOW_SIMULTANEOUS_MODELS,
     ENABLE_CHAT_CONTROLS,
+    ENABLE_SET_AS_DEFAULT_MODEL,
     ENABLE_EVALUATION_ARENA_MODELS,
     USER_PERMISSIONS,
     DEFAULT_USER_ROLE,
@@ -227,6 +228,9 @@ from open_webui.config import (
     ENABLE_SIDEBAR_CREATE_FOLDER,
     ENABLE_FLOATING_BUTTONS,
     ENABLE_DELETE_BUTTON,
+    ENABLE_MESSAGE_INPUT_LOGO,
+    ENABLE_SIDEBAR_USER_PROFILE,
+    ENABLE_PROMPT_SUGGESTIONS,
     # WebUI (OAuth)
     ENABLE_OAUTH_ROLE_MANAGEMENT,
     OAUTH_ROLES_CLAIM,
@@ -1008,6 +1012,7 @@ async def get_app_config(request: Request):
                     "enable_message_rating": app.state.config.ENABLE_MESSAGE_RATING,
                     "allow_simultaneous_models": ALLOW_SIMULTANEOUS_MODELS,
                     "enable_chat_controls": ENABLE_CHAT_CONTROLS,
+                    "enable_set_as_default_model": ENABLE_SET_AS_DEFAULT_MODEL,
                     "enable_admin_export": ENABLE_ADMIN_EXPORT,
                     "enable_admin_chat_access": ENABLE_ADMIN_CHAT_ACCESS,
                     "default_show_changelog": DEFAULT_SHOW_CHANGELOG,
@@ -1021,6 +1026,9 @@ async def get_app_config(request: Request):
                     "enable_sidebar_create_folder": ENABLE_SIDEBAR_CREATE_FOLDER,
                     "enable_floating_buttons": ENABLE_FLOATING_BUTTONS,
                     "enable_delete_button": ENABLE_DELETE_BUTTON,
+                    "enable_sidebar_user_profile": ENABLE_SIDEBAR_USER_PROFILE,
+                    "enable_message_input_logo": ENABLE_MESSAGE_INPUT_LOGO,
+                    "enable_prompt_suggestions": ENABLE_PROMPT_SUGGESTIONS,
                 }
                 if user is not None
                 else {}
