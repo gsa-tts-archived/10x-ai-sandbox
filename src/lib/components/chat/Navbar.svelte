@@ -71,6 +71,20 @@
 					</button>
 				</div>
 
+				{#if !$mobile}
+					<Tooltip content={$i18n.t('New Chat')}>
+						<button
+							class="ml-2 mr-4 {$showSidebar ? 'md:hidden' : ''}"
+							aria-label="New Chat"
+							on:click={() => {
+								initNewChat();
+							}}
+						>
+							<NewChatIcon className="size-5" strokeWidth="2" />
+						</button>
+					</Tooltip>
+				{/if}
+
 				<div
 					class="flex-1 overflow-hidden max-w-full py-0.5
 				{$showSidebar ? 'ml-1' : ''}
@@ -197,25 +211,4 @@
 			</div>
 		</div>
 	</div>
-	{#if !$mobile}
-		<Tooltip content={$i18n.t('New Chat')}>
-			<button
-				class="new-chat-collapsed {$showSidebar ? 'md:hidden' : ''}"
-				aria-label="New Chat"
-				on:click={() => {
-					initNewChat();
-				}}
-			>
-				<NewChatIcon className=" size-5" strokeWidth="2" />
-			</button>
-		</Tooltip>
-	{/if}
 </div>
-
-<style>
-	.new-chat-collapsed {
-		position: absolute;
-		top: 60px;
-		left: 14px;
-	}
-</style>
