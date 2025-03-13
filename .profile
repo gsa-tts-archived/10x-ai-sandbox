@@ -56,7 +56,7 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "===========/startup/===========\n$(df -h | sed -n '2p')\n============================"
 
     echo "===========Skipping runtime pip and npm installs========"
-
+fi
 #     rm -rf node_modules
 # 
 #     # Clean npm cache
