@@ -1,7 +1,7 @@
 <script context="module">
 	// Update this version number when updating the terms content. Any change to
 	// this value will trigger a re-display of the terms for all users.
-	export const TERMS_VERSION = 1;
+	export const TERMS_VERSION = 2;
 </script>
 
 <script lang="ts">
