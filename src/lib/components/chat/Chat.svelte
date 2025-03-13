@@ -623,6 +623,12 @@
 	//////////////////////////
 
 	const initNewChat = async () => {
+		// never use the sessionStorage selected model for new chats
+		if (sessionStorage.selectedModels) {
+			selectedModels = JSON.parse(sessionStorage.selectedModels);
+			sessionStorage.removeItem('selectedModels');
+		}
+
 		if ($page.url.searchParams.get('models')) {
 			selectedModels = $page.url.searchParams.get('models')?.split(',');
 		} else if ($page.url.searchParams.get('model')) {
