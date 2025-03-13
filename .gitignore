@@ -304,3 +304,4 @@ dist
 # cypress artifacts
 cypress/videos
 cypress/screenshots
+vendor
