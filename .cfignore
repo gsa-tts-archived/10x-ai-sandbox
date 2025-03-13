@@ -1,5 +1,4 @@
 .DS_Store
-node_modules
 #/build
 /.svelte-kit
 /package
@@ -211,7 +210,6 @@ bower_components
 .lock-wscript
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
