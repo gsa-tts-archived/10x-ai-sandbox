@@ -666,8 +666,9 @@
 				}
 			}
 		}
-
+		console.log('models: ', $models);
 		selectedModels = selectedModels.filter((modelId) => $models.map((m) => m.id).includes(modelId));
+		console.log('selectedModels is now ', selectedModels);
 		if (selectedModels.length === 0 || (selectedModels.length === 1 && selectedModels[0] === '')) {
 			if ($models.length > 0) {
 				selectedModels = [$models[0].id];
@@ -675,6 +676,7 @@
 				selectedModels = [''];
 			}
 		}
+		console.log('finally selectedModels is ', selectedModels);
 
 		await showControls.set(false);
 		await showCallOverlay.set(false);
