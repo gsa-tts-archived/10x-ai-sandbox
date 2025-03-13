@@ -28,7 +28,7 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "endpoint_url is set to: $endpoint_url"
 
     function trim_url() {
-        local trimmed_url=$(echo "$1" | sed 's/\/openai.*$//')
+        local trimmed_url=$(echo "$1" | sed 's/\/openai.*$//' | sed 's/\/$//')
         echo "$trimmed_url"
     }
 
