@@ -24,7 +24,7 @@ jobs:
       - name: Vendor dependencies
         run: |
           mkdir -p vendor
-          pip download -r backend/requirements_cloudfoundry.txt --no-binary=:none: -d vendor
+          pip download -r requirements.txt --no-binary=:none: -d vendor
           npm install
       - name: Build frontend
         run: |
