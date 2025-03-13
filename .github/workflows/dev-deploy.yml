@@ -21,6 +21,14 @@ jobs:
       - uses: ./.github/actions/setup-project
       - name: Print env name
         run: echo dev
+      - name: Vendor dependencies
+        run: |
+          mkdir -p vendor
+          pip download -r backend/requirements_cloudfoundry.txt --no-binary=:none: -d vendor
+          npm install
+      - name: Build frontend
+        run: |
+          npm run build
       - name: Deploy to cloud.gov
         uses: 18f/cg-deploy-action@main
         env:
