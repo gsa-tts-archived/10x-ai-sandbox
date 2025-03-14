@@ -303,3 +303,12 @@ input[type='number'] {
 .hljs-strong {
 	font-weight: 700;
 }
+
+.gsa-blue {
+	background-color: #005087;
+}
+
+.gsa-blue:focus,
+.gsa-blue:hover {
+	background-color: #4D84AA;
+}
