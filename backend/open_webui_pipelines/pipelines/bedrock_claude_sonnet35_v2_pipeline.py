@@ -129,8 +129,8 @@ class Pipeline:
                         ttft = time.time() - request_init_time
                         ttft_log = {
                             "pipeline_ttft": ttft * 1000,
-                            "model_id": model_id,
-                            "tokens": tokens,
+                            "pipeline_model_id": model_id,
+                            "pipeline_first_tokens": tokens,
                         }
                         json_ttft_log = json.dumps(ttft_log)
                         print("Sonnet 3.5 v2 Pipeline TTFT:", json_ttft_log)
