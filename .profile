@@ -28,15 +28,23 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "endpoint_url is set to: $endpoint_url"
 
     function trim_url() {
-        local trimmed_url=$(echo "$1" | sed 's/\/openai.*$//' | sed 's/\/$//')
+        # Handle both forms of endpoint_url we have seen
+        local trimmed_url=$(echo "$1" | sed -r 's/\/(openai.*)?$//')
         echo "$trimmed_url"
     }
 
     export AZURE_OPENAI_ENDPOINT=$(trim_url "$endpoint_url") 
     echo "AZURE_OPENAI_ENDPOINT is set to: $AZURE_OPENAI_ENDPOINT"  
 
-    export AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME=$(vcap_get_service $VCAP_SERVICE_NAME_AZURE_AI_GPT4O .credentials.model_name)
+    export AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME=$(vcap_get_service $VCAP_SERVICE_NAME_AZURE_AI_GPT4O .credentials.deployment_name)
     echo "AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME is set to: $AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME"
+
+    export AZURE_OPENAI_API_VERSION=$(vcap_get_service $VCAP_SERVICE_NAME_AZURE_AI_GPT4O .credentials.model_version)
+    if [ "$AZURE_OPENAI_API_VERSION" != "2024-10-21" ]; then
+      echo "OHNO DANGER DANGER - Still getting the wrong version from model_version ($AZURE_OPENAI_API_VERSION) - Hard coding to 2024-10-21"
+      export AZURE_OPENAI_API_VERSION="2024-10-21"
+    fi
+    echo "AZURE_OPENAI_API_VERSION is set to: $AZURE_OPENAI_API_VERSION"
 
     export AZURE_OPENAI_API_KEY=$(vcap_get_service $VCAP_SERVICE_NAME_AZURE_AI_GPT4O .credentials.api_key)
     echo "AZURE_OPENAI_API_KEY is set to: $(echo $AZURE_OPENAI_API_KEY | sed 's/^\(....\).*$/\1****/')"

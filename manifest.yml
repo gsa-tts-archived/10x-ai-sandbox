@@ -3,7 +3,7 @@ applications:
   - name: gsai-gsa-((DEPLOY_ROUTE))
     buildpacks:
       - python_buildpack
-      - nodejs_buildpack
+      #- nodejs_buildpack
     stack: cflinuxfs4
     instances: ((web_instances))
     memory: ((web_memory))

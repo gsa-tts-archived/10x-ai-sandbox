@@ -74,6 +74,7 @@
 - To mimic the production env, ensure that `DATABASE_URL` provides a connection string to the container above.
 
 8. **To push to cloud.gov from local**
+(Assumes you have run `npm run build` already - This uses the `/build` contents!)
 
 ```bash
 cf push --strategy rolling --vars-file deploy-config/dev.yml --var OLLAMA_BASE_URL="$OLLAMA_BASE_URL" --var WEBUI_NAME="$WEBUI_NAME" --var SCARF_NO_ANALYTICS="$SCARF_NO_ANALYTICS" --var DO_NOT_TRACK="$DO_NOT_TRACK" --var ANONYMIZED_TELEMETRY="$ANONYMIZED_TELEMETRY" --var GITHUBLOCAL_CLIENT_ID="$GITHUBLOCAL_CLIENT_ID" --var GITHUBLOCAL_CLIENT_SECRET="$GITHUBLOCAL_CLIENT_SECRET" --var AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --var AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" --var AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" --var AZURE_OPENAI_API_KEY="$AZURE_OPENAI_API_KEY" --var AZURE_OPENAI_ENDPOINT="$AZURE_OPENAI_ENDPOINT" --var AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME="$AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME" --var AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME="$AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME" --var WEBUI_SECRET_KEY="$WEBUI_SECRET_KEY" --var DEV_ADMIN_EMAILS="$DEV_ADMIN_EMAILS" --var DEV_USER_EMAILS="$DEV_USER_EMAILS" --var RAG_OPENAI_API_BASE_URL="$RAG_OPENAI_API_BASE_URL" --var RAG_OPENAI_API_KEY="$RAG_OPENAI_API_KEY" --var RAG_EMBEDDING_ENGINE="$RAG_EMBEDDING_ENGINE" --var DEPLOY_ROUTE="$DEPLOY_ROUTE" --var DEPLOY_ENV="$DEPLOY_ENV"
@@ -85,5 +86,3 @@ cf push --strategy rolling --vars-file deploy-config/dev.yml --var OLLAMA_BASE_U
 
 If using Zscaler you need to feed npm the Zscaler CA certificate as an additional
 trusted CA as described in https://help.zscaler.com/unified/adding-custom-certificate-application-specific-trust-store#npm
-
-
