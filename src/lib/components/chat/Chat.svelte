@@ -138,7 +138,7 @@
 
 	$: if (chatIdProp) {
 		(async () => {
-			console.log(chatIdProp);
+			// console.log(chatIdProp);
 
 			prompt = '';
 			files = [];
@@ -180,7 +180,7 @@
 			return;
 		}
 		sessionStorage.selectedModels = JSON.stringify(selectedModels);
-		console.log('saveSessionSelectedModels', selectedModels, sessionStorage.selectedModels);
+		// console.log('saveSessionSelectedModels', selectedModels, sessionStorage.selectedModels);
 	};
 
 	$: if (selectedModels) {
@@ -344,7 +344,7 @@
 
 		// Replace with your iframe's origin
 		if (event.data.type === 'input:prompt') {
-			console.debug(event.data.text);
+			// console.debug(event.data.text);
 
 			const inputElement = document.getElementById('chat-input');
 
@@ -355,7 +355,7 @@
 		}
 
 		if (event.data.type === 'action:submit') {
-			console.debug(event.data.text);
+			// console.debug(event.data.text);
 
 			if (prompt !== '') {
 				await tick();
@@ -364,7 +364,7 @@
 		}
 
 		if (event.data.type === 'input:prompt:submit') {
-			console.debug(event.data.text);
+			// console.debug(event.data.text);
 
 			if (prompt !== '') {
 				await tick();
@@ -376,7 +376,7 @@
 	export let mainContentId;
 
 	onMount(async () => {
-		console.log('mounted');
+		// console.log('mounted');
 		window.addEventListener('message', onMessageHandler);
 		$socket?.on('chat-events', chatEventHandler);
 
@@ -664,7 +664,7 @@
 				sessionStorage.removeItem('selectedModels');
 			} else {
 				if ($config?.default_models) {
-					console.log($config?.default_models.split(',') ?? '');
+					// console.log($config?.default_models.split(',') ?? '');
 					selectedModels = $config?.default_models.split(',');
 				}
 			}
@@ -766,7 +766,7 @@
 			const chatContent = chat.chat;
 
 			if (chatContent) {
-				console.debug(chatContent);
+				// console.debug(chatContent);
 
 				selectedModels =
 					(chatContent?.models ?? undefined) !== undefined
@@ -1088,12 +1088,12 @@
 				// Non-stream response
 				if (!time_to_first_token) {
 					time_to_first_token = chunk_received_time - completion_request_initiated;
-					console.debug(`Time to first token: ${time_to_first_token}`, {
-						time_to_first_token: time_to_first_token,
-						ttft_selected_model: selectedModels[0],
-						browser_first_tokens: choices,
-						env
-					});
+					// console.debug(`Time to first token: ${time_to_first_token}`, {
+					// 	time_to_first_token: time_to_first_token,
+					// 	ttft_selected_model: selectedModels[0],
+					// 	browser_first_tokens: choices,
+					// 	env
+					// });
 					datadogLogs.logger.info(`Time to first token: ${time_to_first_token}`, {
 						time_to_first_token: time_to_first_token,
 						ttft_selected_model: selectedModels[0],
@@ -1110,12 +1110,12 @@
 				} else {
 					if (!time_to_first_token) {
 						time_to_first_token = chunk_received_time - completion_request_initiated;
-						console.debug(`Time to first token: ${time_to_first_token}`, {
-							time_to_first_token: time_to_first_token,
-							ttft_selected_model: selectedModels[0],
-							browser_first_tokens: choices[0]?.delta?.content,
-							env
-						});
+						// console.debug(`Time to first token: ${time_to_first_token}`, {
+						// 	time_to_first_token: time_to_first_token,
+						// 	ttft_selected_model: selectedModels[0],
+						// 	browser_first_tokens: choices[0]?.delta?.content,
+						// 	env
+						// });
 						datadogLogs.logger.info(`Time to first token: ${time_to_first_token}`, {
 							time_to_first_token: time_to_first_token,
 							ttft_selected_model: selectedModels[0],
@@ -1253,7 +1253,7 @@
 	//////////////////////////
 
 	const submitPrompt = async (userPrompt, { _raw = false } = {}) => {
-		console.debug('submitPrompt', userPrompt, $chatId);
+		// console.debug('submitPrompt', userPrompt, $chatId);
 		// SR announcement
 		document.getElementById('svelte-announcer').textContent = 'response is loading';
 
@@ -1425,7 +1425,7 @@
 		const _chatId = JSON.parse(JSON.stringify($chatId));
 		await Promise.all(
 			selectedModelIds.map(async (modelId, _modelIdx) => {
-				console.log('modelId', modelId);
+				// console.log('modelId', modelId);
 				const model = $models.filter((m) => m.id === modelId).at(0);
 
 				if (model) {
@@ -1465,7 +1465,7 @@
 									}, '');
 								}
 
-								console.debug(userContext);
+								// console.debug(userContext);
 							}
 						}
 					}
@@ -1728,7 +1728,7 @@
 	};
 
 	const regenerateResponse = async (message) => {
-		console.log('regenerateResponse');
+		// console.log('regenerateResponse');
 
 		if (history.currentId) {
 			let userMessage = history.messages[message.parentId];
@@ -1749,7 +1749,7 @@
 	};
 
 	const continueResponse = async () => {
-		console.log('continueResponse');
+		// console.log('continueResponse');
 		const _chatId = JSON.parse(JSON.stringify($chatId));
 
 		if (history.currentId && history.messages[history.currentId].done == true) {
