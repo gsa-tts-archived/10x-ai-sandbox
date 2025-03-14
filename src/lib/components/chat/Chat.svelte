@@ -4,6 +4,7 @@
 	import mermaid from 'mermaid';
 	import { PaneGroup, Pane, PaneResizer } from 'paneforge';
 	import { datadogLogs } from '@datadog/browser-logs';
+	import { dev } from '$app/environment';
 
 	import { getContext, onDestroy, onMount, tick } from 'svelte';
 	const i18n: Writable<i18nType> = getContext('i18n');
@@ -132,6 +133,8 @@
 
 	let completion_request_initiated: number = Date.now();
 	let time_to_first_token: number | null = null;
+
+	const env = dev ? 'dev' : 'prod';
 
 	$: if (chatIdProp) {
 		(async () => {
@@ -1086,10 +1089,16 @@
 				if (!time_to_first_token) {
 					time_to_first_token = chunk_received_time - completion_request_initiated;
 					console.debug(`Time to first token: ${time_to_first_token}`, {
-						time_to_first_token: time_to_first_token
+						time_to_first_token: time_to_first_token,
+						ttft_selected_model: selectedModels[0],
+						browser_first_tokens: choices,
+						env
 					});
 					datadogLogs.logger.info(`Time to first token: ${time_to_first_token}`, {
-						time_to_first_token: time_to_first_token
+						time_to_first_token: time_to_first_token,
+						ttft_selected_model: selectedModels[0],
+						browser_first_tokens: choices[0]?.message?.content,
+						env
 					});
 				}
 				message.content += choices[0]?.message?.content;
@@ -1102,10 +1111,16 @@
 					if (!time_to_first_token) {
 						time_to_first_token = chunk_received_time - completion_request_initiated;
 						console.debug(`Time to first token: ${time_to_first_token}`, {
-							time_to_first_token: time_to_first_token
+							time_to_first_token: time_to_first_token,
+							ttft_selected_model: selectedModels[0],
+							browser_first_tokens: choices[0]?.delta?.content,
+							env
 						});
 						datadogLogs.logger.info(`Time to first token: ${time_to_first_token}`, {
-							time_to_first_token: time_to_first_token
+							time_to_first_token: time_to_first_token,
+							ttft_selected_model: selectedModels[0],
+							browser_first_tokens: choices[0]?.delta?.content,
+							env
 						});
 					}
 					message.content += value;
