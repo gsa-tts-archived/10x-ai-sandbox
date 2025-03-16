@@ -10,7 +10,7 @@ fi
 
 git add .secrets.baseline
 if (git diff --staged --name-only -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline) | grep -q "Secret Type"; then
-    git diff --staged --name-only -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline
+    echo "$(git diff --staged --name-only -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline)"
     echo "Detect-secrets detected secrets in staged files"
     exit 1
 fi
