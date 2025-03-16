@@ -497,7 +497,7 @@
 						<img
 							crossorigin="anonymous"
 							src="{WEBUI_BASE_URL}/static/gsa-logo.svg"
-							class="size-7 -translate-x-1.5 rounded-md"
+							class="size-7 -translate-x-1.5"
 							alt="GSA"
 						/>
 					</div>
@@ -507,7 +507,7 @@
 				</div>
 
 				<div>
-					<NewChatIcon className=" size-5" strokeWidth="2" />
+					<NewChatIcon strokeWidth="2" />
 				</div>
 			</a>
 		</div>
