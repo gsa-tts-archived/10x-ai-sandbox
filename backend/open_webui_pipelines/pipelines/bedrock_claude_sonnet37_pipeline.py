@@ -128,12 +128,13 @@ class Pipeline:
                     if ttft is None and tokens:
                         ttft = time.time() - request_init_time
                         ttft_log = {
+                            "pipeline_ttft_name": self.name,
                             "pipeline_ttft": ttft * 1000,
-                            "pipeline_model_id": model_id,
-                            "pipeline_first_tokens": tokens,
+                            "pipeline_ttft_model_id": model_id,
+                            "pipeline_ttft_first_tokens": tokens,
                         }
                         json_ttft_log = json.dumps(ttft_log)
-                        print("Sonnet 3.7 Pipeline TTFT:", json_ttft_log)
+                        print(json_ttft_log)
 
         except self.bedrock_client.exceptions.AccessDeniedException as e:
             print("Access Denied Exception:", e)
