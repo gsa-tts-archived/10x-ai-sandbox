@@ -102,6 +102,8 @@ class Pipeline:
             logger.error("Invalid RATE_LIMIT_REDIS_URL: missing hostname")
             raise ValueError("Invalid RATE_LIMIT_REDIS_URL: missing hostname")
         try:
+            verify_ssl = os.getenv("DEV", "false").lower() == "false"
+            logger.info("Redis SSL verification: " + str(verify_ssl))
             self.redis_client = redis.Redis(
                 host=parsed_url.hostname,
                 port=parsed_url.port if parsed_url.port else 6379,
@@ -110,7 +112,7 @@ class Pipeline:
                 decode_responses=True,
                 socket_timeout=1.0,  # Add timeout
                 socket_connect_timeout=1.0,  # Add connection timeout
-                ssl=True,  # Enable SSL/TLS
+                ssl=verify_ssl,  # Enable SSL/TLS
                 ssl_cert_reqs=None,  # Skip certificate validation, or use 'required' for validation
             )
 
