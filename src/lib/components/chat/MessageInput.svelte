@@ -1184,7 +1184,7 @@
 														<button
 															id="send-message-button"
 															class="{prompt !== ''
-																? 'gsa-blue text-white dark:bg-white dark:text-black outline-none '
+																? 'bg-gsa-blue text-white dark:bg-white dark:text-black outline-none '
 																: 'text-white bg-gray-200 dark:text-gray-900 dark:bg-gray-700 disabled'} transition rounded-full p-1.5 self-center"
 															type="submit"
 															disabled={prompt === ''}
