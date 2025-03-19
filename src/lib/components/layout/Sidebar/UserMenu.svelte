@@ -38,7 +38,7 @@
 			align="start"
 			transition={(e) => fade(e, { duration: 100 })}
 		>
-			{#if $config?.features?.enable_user_settings_menu}
+			{#if $config?.features?.enable_user_settings_menu || role === 'admin'}
 				<DropdownMenu.Item
 					class="flex rounded-md py-2 px-3 w-full hover:bg-gray-50 dark:hover:bg-gray-800 transition"
 					on:click={async () => {
