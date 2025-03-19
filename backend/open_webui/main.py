@@ -1207,7 +1207,7 @@ async def healthcheck():
     # check redis health with REDIS_URL
     redis_client = redis.StrictRedis.from_url(WEBSOCKET_REDIS_URL)
     pong = redis_client.ping()
-    redis_is_healthy = pong is True
+    redis_is_healthy = pong == True
 
     # get cohere proxy health
     response = requests.get("http://localhost:9101/health")
