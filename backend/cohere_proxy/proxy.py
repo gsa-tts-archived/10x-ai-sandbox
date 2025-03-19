@@ -4,6 +4,7 @@ import logging
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
+import botocore.exceptions
 
 from utils.aws import bedrock_client
 
@@ -78,21 +79,13 @@ async def proxy_embeddings(request: Request):
 @app.get("/health")
 async def health():
     is_healthy = False
-    test_body = json.dumps({"texts": ["test"], "input_type": "search_query"})
     try:
-        response = bedrock_client.invoke_model(
-            body=test_body,
-            modelId=model_id,
-            accept="application/json",
-            contentType="application/json",
+        model_can_paginate = bedrock_client.can_paginate("invoke_model")
+        is_healthy = model_can_paginate is False  # False is the expected response
+        return JSONResponse(
+            status_code=200 if is_healthy else 500, content={"ok": is_healthy}
         )
-        response_body = json.loads(response.get("body").read())
-        embeddings = response_body.get("embeddings")
-        is_healthy = len(embeddings) > 0
-
+    except botocore.exceptions.ClientError as e:
+        return False, f"Bedrock client error: {str(e)}"
     except Exception as e:
-        logger.error(f"Cohere proxy health - error occurred: {e}")
-
-    return JSONResponse(
-        status_code=200 if is_healthy else 500, content={"ok": is_healthy}
-    )
+        return False, f"Unexpected error: {str(e)}"
