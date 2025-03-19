@@ -1,7 +1,9 @@
 .DS_Store
-#/build
+#/build - We want to allow built JS resources to get pushed
+node_modules/
 /.svelte-kit
 /package
+#/vendor - We want to allow built/vendored Python resources to get pushed
 .env
 .env.*
 !.env.example

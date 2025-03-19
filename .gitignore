@@ -1,8 +1,9 @@
 .DS_Store
-node_modules
 /build
+node_modules/
 /.svelte-kit
 /package
+/vendor
 .env
 .env.*
 !.env.example
@@ -211,7 +212,6 @@ bower_components
 .lock-wscript
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -304,4 +304,3 @@ dist
 # cypress artifacts
 cypress/videos
 cypress/screenshots
-vendor
