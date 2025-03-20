@@ -1,0 +1,9 @@
+# requirements for production-like and buildpack use.
+
+-r backend/requirements.txt
+
+# Use the non-CUDA Torch
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch==2.6.0+cpu
+
