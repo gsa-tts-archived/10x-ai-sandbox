@@ -23,7 +23,7 @@ services:
 
     container_name: open-webui
     volumes:
-      - open-webui:/app/backend/data
+      - open-webui:/app
     depends_on:
       - ollama
     ports:

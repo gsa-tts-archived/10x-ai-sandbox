@@ -113,8 +113,9 @@ ARG GID=0
 ARG BUILD_HASH=dev-build
 
 # Minimal runtime environment variables
+ARG PORT_DEFAULT=8081
 ENV ENV=prod \
-    PORT=8080 \
+    PORT=${PORT_DEFAULT} \
     USE_OLLAMA_DOCKER=${USE_OLLAMA} \
     USE_CUDA_DOCKER=${USE_CUDA} \
     USE_CUDA_DOCKER_VER=${USE_CUDA_VER} \
@@ -168,7 +169,7 @@ COPY --chown=$UID:$GID ./start.sh /app/start.sh
 # Ensure the user owns the /app directory
 RUN chown -R $UID:$GID /app
 
-EXPOSE 8080
+EXPOSE 8081
 
 ## Healthcheck
 HEALTHCHECK CMD curl --silent --fail http://localhost:${PORT:-8080}/health \
