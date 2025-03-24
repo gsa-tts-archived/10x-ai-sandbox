@@ -105,7 +105,7 @@
    docker swarm leave --force
    ```
 
-   - _NOTE_: a reasonable development cycle might look like pointing your IDE at the app volume (devcontainer style) and redeploying the stack after modifying the app volume. It might be a little tricky share the volume properly, so that you can alternately bring up the single container and the swarm to test single parallel behavior, but it should be possible.
+   - _NOTE_: a reasonable development cycle might look like pointing your IDE at the app volume (devcontainer style) and redeploying the stack after modifying the app volume. It might be a little tricky to share the volume properly, so that you can alternately bring up the single container and the swarm to test single or parallel behavior.
 
 8. **Install autogen for commit and pr messages**:
 
