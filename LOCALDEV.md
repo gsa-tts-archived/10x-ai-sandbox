@@ -86,20 +86,26 @@
    docker swarm init
    ```
 
-   - Deploy the stack using the `docker-compose.yaml` file:
+   - Deploy the stack. Make sure to deploy with app `replicas: 1` in the `docker-compose.yaml` the first time to avoid parallel migration conflicts in your fresh db:
 
    ```bash
    docker stack deploy --detach=false -c docker-compose.yaml gsai-cluster
-   # NOTE: the command will exit successfully after 'overall progress: 8 out of 8 tasks' (sometimes this take a couple minutes?) at which point, the app should be accessible at http://localhost:8080
+   # NOTE: the command will exit successfully after 'verify: Service ... converged' at which point, the app should be accessible at http://localhost:8080
    ```
 
-   - To take down the cluster:
+   - To take down the container stack:
 
    ```bash
-   docker stack rm gsai-cluster
+   docker stack rm gsai-cluster # takes 10-20 seconds to clean up
    ```
 
-   - _NOTE_: a proper development cycle will likely require using volumes for both postgres and the app, and developing within the gsai-container.
+   - To take down the node:
+
+   ```bash
+   docker swarm leave --force
+   ```
+
+   - _NOTE_: a reasonable development cycle might look like pointing your IDE at the app volume (devcontainer style) and redeploying the stack after modifying the app volume. It might be a little tricky share the volume properly, so that you can alternately bring up the single container and the swarm to test single parallel behavior, but it should be possible.
 
 8. **Install autogen for commit and pr messages**:
 

@@ -259,6 +259,7 @@ def create_commit():
         print("Error creating commit.", file=sys.stderr)
         sys.exit(1)
     print("\n✨ Commit created successfully! ✨\n")
+    print(f"Commit message: {commit_message}\n")
 
 
 def push_commit():

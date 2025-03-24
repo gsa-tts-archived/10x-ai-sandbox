@@ -4,6 +4,7 @@
 # ##############################################################################
 FROM node:22.14.0-alpine3.21 AS build-frontend
 
+COPY z-root-public.crt /usr/local/share/ca-certificates/z-root-public.crt
 COPY z-root-public.pem /usr/local/share/ca-certificates/z-root-public.pem
 # RUN apt-get update && \
 #     apt-get install -y ca-certificates && \
@@ -36,7 +37,7 @@ RUN npm run build
 # ##############################################################################
 # ###               2) PYTHON DEPENDENCIES BUILDER STAGE                     ###
 # ##############################################################################
-FROM gsai-jammy-builder AS builder
+FROM jimmoffetgsa/gsai:jammy-builder-32325 AS builder
 
 ARG USE_CUDA=false
 ARG USE_OLLAMA=false
@@ -74,7 +75,6 @@ ENV ENV=prod \
 COPY ./backend/requirements.txt ./requirements.txt
 RUN uv pip install --system -r requirements.txt --no-cache-dir
 
-# We should move these python fixes to the builder *might* need pip upgrade in final
 RUN uv pip install --upgrade --system pillow==10.3.0
 RUN uv pip install --upgrade --system setuptools==70.0.0
 RUN uv pip install --upgrade --system posthog==3.11.0
@@ -100,49 +100,19 @@ RUN python -c "import os; \
 # ##############################################################################
 # ###               3) FINAL RUNTIME IMAGE                                   ###
 # ##############################################################################
-FROM gsai-jammy-final AS final
-
-## We re-declare our ARGs/ENVs as needed
-ARG USE_CUDA=false
-ARG USE_OLLAMA=false
-ARG USE_CUDA_VER
-ARG USE_EMBEDDING_MODEL
-ARG USE_RERANKING_MODEL
-ARG UID=0
-ARG GID=0
-ARG BUILD_HASH=dev-build
-
-# Minimal runtime environment variables
-ARG PORT_DEFAULT=8081
-ENV ENV=prod \
-    PORT=${PORT_DEFAULT} \
-    USE_OLLAMA_DOCKER=${USE_OLLAMA} \
-    USE_CUDA_DOCKER=${USE_CUDA} \
-    USE_CUDA_DOCKER_VER=${USE_CUDA_VER} \
-    USE_EMBEDDING_MODEL_DOCKER=${USE_EMBEDDING_MODEL} \
-    USE_RERANKING_MODEL_DOCKER=${USE_RERANKING_MODEL} \
-    HOME=/root \
-    RAG_EMBEDDING_ENGINE=openai \
-    WEBUI_BUILD_VERSION=${BUILD_HASH} \
-    DOCKER=true
-
-WORKDIR /app
-
-# (Optional) If you run as non-root
-RUN if [ $UID -ne 0 ]; then \
-    if [ $GID -ne 0 ]; then \
-    addgroup --gid $GID app; \
-    fi; \
-    adduser --uid $UID --gid $GID --home $HOME --disabled-password --no-create-home app; \
-    fi
+FROM jimmoffetgsa/gsai:jammy-final-32325 AS final
 
 # ----------------------------------------------------
 # 1. Copy only what we need from builder
 # ----------------------------------------------------
 
+ARG UID=0
+ARG GID=0
+
 COPY --from=builder /usr/local/lib/python3.11/dist-packages \
     /usr/local/lib/python3.11/dist-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /app/backend/data/cache/whisper/models /app/backend/data/cache/whisper/models
 COPY --from=builder /app/backend/data/cache/whisper/models /app/backend/data/cache/whisper/models
 RUN ln -sf /usr/bin/python3.11 /usr/bin/python
 
@@ -169,7 +139,7 @@ COPY --chown=$UID:$GID ./start.sh /app/start.sh
 # Ensure the user owns the /app directory
 RUN chown -R $UID:$GID /app
 
-EXPOSE 8081
+# EXPOSE 8081
 
 ## Healthcheck
 HEALTHCHECK CMD curl --silent --fail http://localhost:${PORT:-8080}/health \

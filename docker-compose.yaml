@@ -19,7 +19,7 @@ services:
     volumes:
       - app-data:/app
     deploy:
-      replicas: 8
+      replicas: 8 # keep at 1 if db is fresh, then scale/redeploy after first success
       resources:
         reservations:
           cpus: "0.100"
@@ -60,8 +60,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres # pragma: allowlist secret
       POSTGRES_DB: postgres
-    # volumes:
-    #   - db-data:/var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
     deploy:
       replicas: 1
       resources:
@@ -101,6 +101,6 @@ networks:
 
 volumes:
   app-data:
-  # db-data:
+  db-data:
   # redis-data:
   
