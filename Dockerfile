@@ -39,6 +39,12 @@ RUN npm run build
 # ##############################################################################
 FROM jimmoffetgsa/gsai:jammy-builder-32325 AS builder
 
+# COPY z-root-public.crt /usr/local/share/ca-certificates/z-root-public.crt
+# COPY z-root-public.pem /usr/local/share/ca-certificates/z-root-public.pem
+# RUN apt-get update && \
+#     apt-get install -y ca-certificates && \
+#     update-ca-certificates
+
 ARG USE_CUDA=false
 ARG USE_OLLAMA=false
 ARG USE_CUDA_VER=cu121
@@ -71,6 +77,7 @@ ENV ENV=prod \
     TIKTOKEN_CACHE_DIR="/app/backend/data/cache/tiktoken" \
     HF_HOME="/app/backend/data/cache/embedding/models" \
     HOME=/root
+
 
 COPY ./backend/requirements.txt ./requirements.txt
 RUN uv pip uninstall --system setuptools && \
