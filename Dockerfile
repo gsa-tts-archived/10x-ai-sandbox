@@ -39,6 +39,12 @@ RUN npm run build
 # ##############################################################################
 FROM jimmoffetgsa/gsai:jammy-builder-32325 AS builder
 
+# COPY z-root-public.crt /usr/local/share/ca-certificates/z-root-public.crt
+# COPY z-root-public.pem /usr/local/share/ca-certificates/z-root-public.pem
+# RUN apt-get update && \
+#     apt-get install -y ca-certificates && \
+#     update-ca-certificates
+
 ARG USE_CUDA=false
 ARG USE_OLLAMA=false
 ARG USE_CUDA_VER=cu121
@@ -72,11 +78,11 @@ ENV ENV=prod \
     HF_HOME="/app/backend/data/cache/embedding/models" \
     HOME=/root
 
+
 COPY ./backend/requirements.txt ./requirements.txt
 RUN uv pip install --system -r requirements.txt --no-cache-dir
-
-RUN uv pip install --upgrade --system pillow==10.3.0
 RUN uv pip install --upgrade --system setuptools==70.0.0
+RUN uv pip install --upgrade --system pillow==10.3.0
 RUN uv pip install --upgrade --system posthog==3.11.0
 RUN uv pip install --upgrade --system starlette==0.40.0
 RUN uv pip uninstall --system flask
@@ -92,9 +98,9 @@ RUN uv pip uninstall --system ecdsa
 # RUN python -c "import os; \
 #     from sentence_transformers import SentenceTransformer; \
 #     SentenceTransformer(os.environ['RAG_EMBEDDING_MODEL'], device='cpu')" && \
-RUN python -c "import os; \
-    from faster_whisper import WhisperModel; \
-    WhisperModel(os.environ['WHISPER_MODEL'], device='cpu', compute_type='int8', download_root=os.environ['WHISPER_MODEL_DIR'])" 
+# RUN python -c "import os; \
+#     from faster_whisper import WhisperModel; \
+#     WhisperModel(os.environ['WHISPER_MODEL'], device='cpu', compute_type='int8', download_root=os.environ['WHISPER_MODEL_DIR'])" 
 # python -c "import os; import tiktoken; tiktoken.get_encoding(os.environ['TIKTOKEN_ENCODING_NAME'])"
 
 # ##############################################################################
@@ -112,8 +118,7 @@ ARG GID=0
 COPY --from=builder /usr/local/lib/python3.11/dist-packages \
     /usr/local/lib/python3.11/dist-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
-COPY --from=builder /app/backend/data/cache/whisper/models /app/backend/data/cache/whisper/models
-COPY --from=builder /app/backend/data/cache/whisper/models /app/backend/data/cache/whisper/models
+# COPY --from=builder /app/backend/data/cache/whisper/models /app/backend/data/cache/whisper/models
 RUN ln -sf /usr/bin/python3.11 /usr/bin/python
 
 # # Copy any caches or model downloads you want at runtime
