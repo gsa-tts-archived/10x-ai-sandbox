@@ -47,6 +47,14 @@ jobs:
         run: |
           docker builder prune --all --force
 
+      - name: Test 8080 endpoint
+        run: |
+          curl -X 'GET' 'http://localhost:8080/api/version' -H 'accept: application/json'
+
+      - name: Test 3000 endpoint
+        run: |
+          curl -X 'GET' 'http://localhost:3000/api/version' -H 'accept: application/json'
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
