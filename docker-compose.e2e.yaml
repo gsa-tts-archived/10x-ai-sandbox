@@ -1,6 +1,8 @@
 services:
   app:
-    image: gsai-container
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       - BYPASS_MODEL_ACCESS_CONTROL=True
       - ENABLE_SIGNUP=true
