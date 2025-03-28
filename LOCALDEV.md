@@ -129,24 +129,15 @@
 
 `npx cypress install`
 
-- You can remove the local backend db and run the backend and Ollama however you want, as long as they're available at `:8080` and `:11434` respectively.
+- You can remove the local backend db and run the backend however you want, as long as it's available at `:8080`.
 
-<!-- Commenting out how to run in docker as this is currently broken:
-Here's how to run them via docker:
+Here's how to run it via docker:
 
 ```
-OPEN_WEBUI_PORT=8080 rm ./backend/data/webui.db || true && \
-            docker compose \
-            --file docker-compose.yaml \
-            --file docker-compose.api.yaml \
-            up --detach --build
-``` -->
+docker compose --file docker-compose.e2e.yaml up --detach --build
+```
 
-- If you have Ollama installed and running locally with at least one model, you can just run:
-
-`rm ./backend/data/webui.db || true && ./start.sh`
-
-- Once the app is available at 8080 and Ollama is available at 11434, you can run cypress with the helper script:
+- Once the app is available at 8080, you can run cypress with the helper script:
 
 `npm run cy:open`
 
