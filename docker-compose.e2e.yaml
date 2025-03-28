@@ -4,6 +4,10 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
+      - PUBLIC_DATADOG_APP_ID=1570fdb1-4af6-40bd-8afc-33962f7e4f75
+      - PUBLIC_DATADOG_CLIENT_TOKEN=pub4943adb8fbab823c0b0d2c75a8100771
+      - PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN=pub010cb3969c15a90f52d688046cb62a8e
+      - PUBLIC_DATADOG_SERVICE='gsai_rum'
       - BYPASS_MODEL_ACCESS_CONTROL=True
       - ENABLE_SIGNUP=true
       - ENABLE_LOGIN_FORM=true
