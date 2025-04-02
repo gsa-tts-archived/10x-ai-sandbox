@@ -134,7 +134,10 @@
 Here's how to run it via docker:
 
 ```
-docker compose --file docker-compose.e2e.yaml up --detach --build
+OPEN_WEBUI_PORT=8080 rm ./backend/data/webui.db || true && \
+            docker compose \
+            --file docker-compose.e2e.yaml \
+            up --detach --build
 ```
 
 - Once the app is available at 8080, you can run cypress with the helper script:

@@ -51,16 +51,12 @@ jobs:
         run: |
           curl -X 'GET' 'http://localhost:8080/api/version' -H 'accept: application/json'
 
-      - name: Test 3000 endpoint
-        run: |
-          curl -X 'GET' 'http://localhost:3000/api/version' -H 'accept: application/json'
-
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          wait-on: 'http://127.0.0.1:8080'
-          config: baseUrl=http://127.0.0.1:8080
+          wait-on: 'http://localhost:8080'
+          config: baseUrl=http://localhost:8080
 
       - uses: actions/upload-artifact@v4
         if: always()
