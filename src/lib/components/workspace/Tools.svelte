@@ -237,7 +237,10 @@
 									<div class="line-clamp-1">
 										{tool.name}
 
-										<span class=" text-gray-600 text-xs font-medium flex-shrink-0">{tool.id}</span>
+										<span
+											class=" text-gray-600 dark:text-gray-500 text-xs font-medium flex-shrink-0"
+											>{tool.id}</span
+										>
 									</div>
 								</div>
 							</Tooltip>

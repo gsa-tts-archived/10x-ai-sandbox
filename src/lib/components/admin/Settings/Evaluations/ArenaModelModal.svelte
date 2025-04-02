@@ -327,7 +327,7 @@
 									{/each}
 								</div>
 							{:else}
-								<div class="text-gray-600 text-xs text-center py-2">
+								<div class="text-gray-600 dark:text-gray-500 text-xs text-center py-2">
 									{$i18n.t('Leave empty to include all models or select specific models')}
 								</div>
 							{/if}
