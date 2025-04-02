@@ -217,7 +217,7 @@
 
 					<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
 						{$i18n.t('Valid time units:')}
-						<span class=" text-gray-600 font-medium"
+						<span class=" text-gray-600 dark:text-gray-500 font-medium"
 							>{$i18n.t("'s', 'm', 'h', 'd', 'w' or '-1' for no expiration.")}</span
 						>
 					</div>
