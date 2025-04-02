@@ -163,7 +163,7 @@
 						</div>
 
 						<div class="mt-3 flex justify-between">
-							<div class="text-xs text-gray-600">
+							<div class="text-xs text-gray-600 dark:text-gray-500">
 								<Tooltip
 									content={item?.user?.email ?? $i18n.t('Deleted User')}
 									className="flex shrink-0"

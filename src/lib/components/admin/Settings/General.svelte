@@ -145,7 +145,7 @@
 								<a
 									href="https://docs.openwebui.com/getting-started/advanced-topics/api-endpoints"
 									target="_blank"
-									class=" text-gray-600 font-medium underline"
+									class=" text-gray-600 dark:text-gray-500 font-medium underline"
 								>
 									{$i18n.t('To learn more about available endpoints, visit our documentation.')}
 								</a>
@@ -391,7 +391,7 @@
 						</div>
 						<div class="text-xs text-gray-400 dark:text-gray-500">
 							<a
-								class=" text-gray-600 font-medium underline"
+								class=" text-gray-600 dark:text-gray-500 font-medium underline"
 								href="https://ldap.com/ldap-filters/"
 								target="_blank"
 							>

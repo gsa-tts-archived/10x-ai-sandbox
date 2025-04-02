@@ -194,7 +194,7 @@
 								</h1>
 
 								{#if $config?.onboarding ?? false}
-									<div class=" mt-1 text-xs font-medium text-gray-600">
+									<div class=" mt-1 text-xs font-medium text-gray-600 dark:text-gray-500">
 										ⓘ {$WEBUI_NAME}
 										{$i18n.t(
 											'does not make any external connections, and your data stays securely on your locally hosted server.'

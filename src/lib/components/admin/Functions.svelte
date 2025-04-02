@@ -484,7 +484,7 @@
 		deleteHandler(selectedFunction);
 	}}
 >
-	<div class=" text-sm text-gray-600">
+	<div class=" text-sm text-gray-600 dark:text-gray-500">
 		{$i18n.t('This will delete')} <span class="  font-semibold">{selectedFunction.name}</span>.
 	</div>
 </DeleteConfirmDialog>
@@ -523,7 +523,7 @@
 		reader.readAsText(importFiles[0]);
 	}}
 >
-	<div class="text-sm text-gray-600">
+	<div class="text-sm text-gray-600 dark:text-gray-500">
 		<div class=" bg-yellow-500/20 text-yellow-700 dark:text-yellow-200 rounded-lg px-4 py-3">
 			<div>Please carefully review the following warnings:</div>
 
