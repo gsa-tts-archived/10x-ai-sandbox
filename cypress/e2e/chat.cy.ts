@@ -18,6 +18,7 @@ describe('Chats', () => {
 
 	// model name should be the exact text shown in the model selector dropdown
 	const chatTest = (modelName) => {
+		cy.clearTCModal();
 		// Click on the model selector
 		cy.get('button[id="model-selector-0-button"]').click();
 		// Select the desired model

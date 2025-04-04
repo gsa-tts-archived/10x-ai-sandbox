@@ -106,6 +106,7 @@ Cypress.Commands.add('registerAdmin', () => registerAdmin());
 Cypress.Commands.add('registerUser', () => registerUser());
 Cypress.Commands.add('loginAdmin', () => loginAdmin());
 Cypress.Commands.add('loginUser', () => loginUser());
+Cypress.Commands.add('clearTCModal', () => clearTCModal());
 
 before(() => {
 	cy.registerAdmin();

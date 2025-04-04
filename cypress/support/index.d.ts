@@ -9,5 +9,6 @@ declare namespace Cypress {
 		registerUser(): Chainable<Response<any>>;
 		loginAdmin(): Chainable<null>;
 		loginUser(): Chainable<null>;
+		clearTCModal(): Chainable<null>;
 	}
 }
