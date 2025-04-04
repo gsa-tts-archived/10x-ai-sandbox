@@ -19,6 +19,8 @@ jobs:
       PUBLIC_DATADOG_CLIENT_TOKEN:  ${{ secrets.DATADOG_CLIENT_TOKEN }}
       PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN: ${{ secrets.DATADOG_BROWSERLOGS_CLIENT_TOKEN }}
       PUBLIC_DATADOG_SERVICE:  ${{ secrets.DATADOG_SERVICE }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       BEDROCK_ENDPOINT_URL: ${{ secrets.BEDROCK_ENDPOINT_URL }}
       BEDROCK_ASSUME_ROLE: ${{ secrets.BEDROCK_ASSUME_ROLE }}
@@ -26,6 +28,11 @@ jobs:
       BEDROCK_CLAUDE_SONNET_35_ARN: ${{ secrets.BEDROCK_CLAUDE_SONNET_35_ARN }}
       BEDROCK_CLAUDE_SONNET_37_ARN: ${{ secrets.BEDROCK_CLAUDE_SONNET_37_ARN }}
       BEDROCK_CLAUDE_HAIKU_35_ARN: ${{ secrets.BEDROCK_CLAUDE_HAIKU_35_ARN }}
+      OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+      DEV_ADMIN_EMAILS: ${{ secrets.DEV_ADMIN_EMAILS }}
+      OPENID_PROVIDER_URL: ${{ secrets.OPENID_PROVIDER_URL }}
+      OPENID_REDIRECT_URI: ${{ secrets.OPENID_REDIRECT_URI }}
+      OAUTH_PROVIDER_NAME: ${{ secrets.OAUTH_PROVIDER_NAME }}
     steps:
       - name: Maximize build space
         uses: AdityaGarg8/remove-unwanted-software@v4.1
@@ -47,16 +54,16 @@ jobs:
         run: |
           docker builder prune --all --force
 
-      - name: Test 8080 endpoint
+      - name: Test 8081 endpoint
         run: |
-          curl -X 'GET' 'http://localhost:8080/api/version' -H 'accept: application/json'
+          curl -X 'GET' 'http://localhost:8081/api/version' -H 'accept: application/json'
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          wait-on: 'http://localhost:8080'
-          config: baseUrl=http://localhost:8080
+          wait-on: 'http://localhost:8081'
+          config: baseUrl=http://localhost:8081
 
       - uses: actions/upload-artifact@v4
         if: always()
