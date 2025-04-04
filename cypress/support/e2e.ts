@@ -108,7 +108,6 @@ Cypress.Commands.add('loginAdmin', () => loginAdmin());
 Cypress.Commands.add('loginUser', () => loginUser());
 
 before(() => {
-	cy.log('IN BEFORE HOOK FOR ALL TESTS');
 	cy.registerAdmin();
 	cy.registerUser();
 });

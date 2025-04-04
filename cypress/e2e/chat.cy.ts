@@ -11,7 +11,7 @@ describe('Chats', () => {
 
 	beforeEach(() => {
 		// Login as the regular user
-		cy.loginUser();
+		cy.loginAdmin();
 		// Visit the home page
 		cy.visit('/');
 	});
