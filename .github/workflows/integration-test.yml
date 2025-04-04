@@ -50,9 +50,9 @@ jobs:
             --file docker-compose.e2e.yaml \
             up --detach --build
 
-      - name: Delete Docker build cache
-        run: |
-          docker builder prune --all --force
+      # - name: Delete Docker build cache
+      #   run: |
+      #     docker builder prune --all --force
 
       - name: Test 8081 endpoint
         run: |
