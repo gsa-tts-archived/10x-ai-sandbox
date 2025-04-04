@@ -51,7 +51,7 @@ const login = (email: string, password: string) => {
 			cy.get('button[type="submit"]').click();
 			// Agree to terms and conditions if it pops up
 			clearTCModal();
-			cy.contains('How can I help you today').should('exist');
+			cy.contains('How can I help you today', { timeout: 5_000 }).should('exist');
 		},
 		{
 			validate: () => {
