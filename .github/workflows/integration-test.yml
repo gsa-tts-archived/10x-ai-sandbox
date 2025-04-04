@@ -60,9 +60,12 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        env:
+          - DEBUG: '@cypress/github-action'
         with:
           browser: chrome
           wait-on: 'http://localhost:8081'
+          wait-on-timeout: 20
           config: baseUrl=http://localhost:8081
 
       - uses: actions/upload-artifact@v4
