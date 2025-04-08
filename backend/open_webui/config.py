@@ -110,9 +110,8 @@ class ConfigManager:
         self._cache_refreshed_at = 0
 
     def get_value(self, path: str, default=None):
-        config = self.get_config()
         path_parts = path.split(".")
-        current = config
+        current = self.get_config()
         for key in path_parts:
             if key in current:
                 current = current[key]
