@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 from open_webui.utils.auth import get_admin_user, get_verified_user
-from open_webui.config import get_config, save_config
+from open_webui.config import config_manager
 from open_webui.config import BannerModel
 
 
@@ -22,8 +22,8 @@ class ImportConfigForm(BaseModel):
 
 @router.post("/import", response_model=dict)
 async def import_config(form_data: ImportConfigForm, user=Depends(get_admin_user)):
-    save_config(form_data.config)
-    return get_config()
+    config_manager.save_config(form_data.config)
+    return config_manager.get_config()
 
 
 ############################
@@ -33,7 +33,7 @@ async def import_config(form_data: ImportConfigForm, user=Depends(get_admin_user
 
 @router.get("/export", response_model=dict)
 async def export_config(user=Depends(get_admin_user)):
-    return get_config()
+    return config_manager.get_config()
 
 
 ############################

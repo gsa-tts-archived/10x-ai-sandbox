@@ -282,7 +282,7 @@ from open_webui.config import (
     AUTOCOMPLETE_GENERATION_PROMPT_TEMPLATE,
     AUTOCOMPLETE_GENERATION_INPUT_MAX_LENGTH,
     AppConfig,
-    reset_config,
+    config_manager,
 )
 from open_webui.env import (
     CHANGELOG,
@@ -301,6 +301,7 @@ from open_webui.env import (
     RESET_CONFIG_ON_START,
     OFFLINE_MODE,
     WEBSOCKET_REDIS_URL,
+    CONFIG_REDIS_URL,
 )
 
 
@@ -367,7 +368,7 @@ https://github.com/open-webui/open-webui
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if RESET_CONFIG_ON_START:
-        reset_config()
+        config_manager.reset_config()
 
     asyncio.create_task(periodic_usage_pool_cleanup())
     yield
@@ -1203,7 +1204,8 @@ async def healthcheck():
     pipeline_is_healthy = False
     cohere_is_healthy = False
     db_is_healthy = False
-    redis_is_healthy = False
+    websocket_redis_is_healthy = False
+    config_redis_is_healthy = False
 
     # get db health
     Session.execute(text("SELECT 1;")).all()
@@ -1214,10 +1216,15 @@ async def healthcheck():
     if response.status_code == 200:
         pipeline_is_healthy = True
 
-    # check redis health with REDIS_URL
-    redis_client = redis.StrictRedis.from_url(WEBSOCKET_REDIS_URL)
-    pong = redis_client.ping()
-    redis_is_healthy = pong is True
+    # check websocket redis health with WEBSOCKET_REDIS_URL
+    websocket_redis_client = redis.StrictRedis.from_url(WEBSOCKET_REDIS_URL)
+    pong = websocket_redis_client.ping()
+    websocket_redis_is_healthy = pong is True
+
+    # check config redis health with CONFIG_REDIS_URL
+    config_redis_client = redis.StrictRedis.from_url(CONFIG_REDIS_URL)
+    pong = config_redis_client.ping()
+    config_redis_is_healthy = pong is True
 
     # get cohere proxy health
     response = requests.get("http://localhost:9101/health")
@@ -1225,7 +1232,11 @@ async def healthcheck():
         cohere_is_healthy = True
 
     healthy = (
-        pipeline_is_healthy and cohere_is_healthy and db_is_healthy and redis_is_healthy
+        pipeline_is_healthy
+        and cohere_is_healthy
+        and db_is_healthy
+        and websocket_redis_is_healthy
+        and config_redis_is_healthy
     )
 
     if not healthy:
@@ -1234,7 +1245,8 @@ async def healthcheck():
             + f"pipeline_is_healthy: {pipeline_is_healthy}\n"
             + f"cohere_is_healthy: {cohere_is_healthy}\n"
             + f"db_is_healthy: {db_is_healthy}\n"
-            + f"redis_is_healthy: {redis_is_healthy}\n"
+            + f"websocket_redis_is_healthy: {websocket_redis_is_healthy}\n"
+            + f"config_redis_is_healthy: {config_redis_is_healthy}\n"
         )
         raise HTTPException(status_code=500, detail="Health check failed")
 

@@ -2,15 +2,15 @@ import json
 import logging
 import os
 import shutil
-from datetime import datetime
+import time
 from pathlib import Path
 from typing import Generic, Optional, TypeVar
 from urllib.parse import urlparse
 
 import chromadb
 import requests
-import yaml
-from open_webui.internal.db import Base, get_db
+import redis
+
 from open_webui.env import (
     OPEN_WEBUI_DIR,
     DATA_DIR,
@@ -22,9 +22,11 @@ from open_webui.env import (
     log,
     DATABASE_URL,
     OFFLINE_MODE,
+    CONFIG_REDIS_URL,
 )
 from pydantic import BaseModel
-from sqlalchemy import JSON, Column, DateTime, Integer, func
+
+CONFIG_KEY = "config:data"
 
 
 class EndpointFilter(logging.Filter):
@@ -38,6 +40,8 @@ logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
 ####################################
 # Config helpers
 ####################################
+
+# TODO: Maybe move this elsewhere, it doesn't really belong in config
 
 
 # Function to run the alembic migrations
@@ -61,14 +65,74 @@ def run_migrations():
 run_migrations()
 
 
-class Config(Base):
-    __tablename__ = "config"
+class ConfigManager:
+    DEFAULT_CONFIG = {
+        "version": 0,
+        "ui": {},
+    }
 
-    id = Column(Integer, primary_key=True)
-    data = Column(JSON, nullable=False)
-    version = Column(Integer, nullable=False, default=0)
-    created_at = Column(DateTime, nullable=False, server_default=func.now())
-    updated_at = Column(DateTime, nullable=True, onupdate=func.now())
+    def __init__(self, redis_url=CONFIG_REDIS_URL, key="config:data", cache_ttl=10):
+        self.redis_url = redis_url
+        self.key = key
+        self.cache_ttl = cache_ttl
+        self.current_config = None
+        self._cache_refreshed_at = 0
+        self.redis_client = redis.Redis.from_url(redis_url)
+
+    def _is_cache_valid(self):
+        cache_age = time.time() - self._cache_refreshed_at
+        return self.current_config is not None and cache_age < self.cache_ttl
+
+    def save_config(self, config):
+        log.info(f"CONFIG MANAGER: Saving config {config}")
+        self.redis_client.set(self.key, json.dumps(config))
+        self.current_config = config
+        self._cache_refreshed_at = time.time()
+
+    def get_config(self):
+        # If cache is still valid, return its contents
+        if self._is_cache_valid():
+            return self.current_config
+        # Otherwise, fetch the config from Redis
+        config_data = self.redis_client.get(self.key)
+        if config_data is None:
+            config = self.DEFAULT_CONFIG
+        else:
+            config = json.loads(config_data)
+        # Update the cache
+        self.current_config = config
+        self._cache_refreshed_at = time.time()
+        return config
+
+    def reset_config(self):
+        self.redis_client.delete(self.key)
+        self.current_config = None
+        self._cache_refreshed_at = 0
+
+    def get_value(self, path: str, default=None):
+        config = self.get_config()
+        path_parts = path.split(".")
+        current = config
+        for key in path_parts:
+            if key in current:
+                current = current[key]
+            else:
+                return default
+        return current
+
+    def set_value(self, path: str, value):
+        config = self.get_config()
+        path_parts = path.split(".")
+        current = config
+        for i, key in enumerate(path_parts[:-1]):
+            if key not in current or not isinstance(current[key], dict):
+                current[key] = {}
+            current = current[key]
+        current[path_parts[-1]] = value
+        self.save_config(config)
+
+
+config_manager = ConfigManager(CONFIG_REDIS_URL, CONFIG_KEY)
 
 
 def load_json_config():
@@ -76,114 +140,38 @@ def load_json_config():
         return json.load(file)
 
 
-def save_to_db(data):
-    with get_db() as db:
-        existing_config = db.query(Config).first()
-        if not existing_config:
-            new_config = Config(data=data, version=0)
-            db.add(new_config)
-        else:
-            existing_config.data = data
-            existing_config.updated_at = datetime.now()
-            db.add(existing_config)
-        db.commit()
-
-
-def reset_config():
-    with get_db() as db:
-        db.query(Config).delete()
-        db.commit()
-
-
 # When initializing, check if config.json exists and migrate it to the database
 if os.path.exists(f"{DATA_DIR}/config.json"):
     data = load_json_config()
-    save_to_db(data)
+    config_manager.save_config(data)
     os.rename(f"{DATA_DIR}/config.json", f"{DATA_DIR}/old_config.json")
-
-DEFAULT_CONFIG = {
-    "version": 0,
-    "ui": {
-        "default_locale": "",
-        "prompt_suggestions": [
-            {
-                "title": [
-                    "Help me with the FAR",
-                ],
-                "content": "Help me understand the Federal Acquisition Regulations; give me an overview of the FAR Parts and how they're used",
-            },
-            {
-                "title": [
-                    "Generate ideas for a report",
-                ],
-                "content": "Generate ideas for a report about historical preservation, specifically focused on federal buildings",
-            },
-            {
-                "title": [
-                    "Summarize the meeting notes",
-                ],
-                "content": "Summarize meeting notes and pull out key points and next steps. Remember to avoid putting personally identifiable information into the chat.",
-            },
-        ],
-    },
-}
-
-
-def get_config():
-    with get_db() as db:
-        config_entry = db.query(Config).order_by(Config.id.desc()).first()
-        return config_entry.data if config_entry else DEFAULT_CONFIG
-
-
-CONFIG_DATA = get_config()
-
-
-def get_config_value(config_path: str):
-    path_parts = config_path.split(".")
-    cur_config = CONFIG_DATA
-    for key in path_parts:
-        if key in cur_config:
-            cur_config = cur_config[key]
-        else:
-            return None
-    return cur_config
-
-
-PERSISTENT_CONFIG_REGISTRY = []
-
-
-def save_config(config):
-    global CONFIG_DATA
-    global PERSISTENT_CONFIG_REGISTRY
-    try:
-        save_to_db(config)
-        CONFIG_DATA = config
-
-        # Trigger updates on all registered PersistentConfig entries
-        for config_item in PERSISTENT_CONFIG_REGISTRY:
-            config_item.update()
-    except Exception as e:
-        log.exception(e)
-        return False
-    return True
 
 
 T = TypeVar("T")
 
 
 class PersistentConfig(Generic[T]):
-    def __init__(self, env_name: str, config_path: str, env_value: T):
+    registry = []
+
+    def __init__(
+        self,
+        env_name: str,
+        config_path: str,
+        env_value: T,
+        config_manager=config_manager,
+    ):
         self.env_name = env_name
         self.config_path = config_path
         self.env_value = env_value
-        self.config_value = get_config_value(config_path)
+        self.config_manager = config_manager
+        self.config_value = config_manager.get_value(config_path)
         if self.config_value is not None:
             log.info(f"'{env_name}' loaded from the latest database entry")
             self.value = self.config_value
         else:
             self.value = env_value
 
-        PERSISTENT_CONFIG_REGISTRY.append(self)
+        PersistentConfig.registry.append(self)
 
     def __str__(self):
         return str(self.value)
@@ -202,21 +190,22 @@ class PersistentConfig(Generic[T]):
         return super().__getattribute__(item)
 
     def update(self):
-        new_value = get_config_value(self.config_path)
+        new_value = self.config_manager.get_value(self.config_path)
         if new_value is not None:
             self.value = new_value
-            log.info(f"Updated {self.env_name} to new value {self.value}")
 
     def save(self):
         log.info(f"Saving '{self.env_name}' to the database")
         path_parts = self.config_path.split(".")
-        sub_config = CONFIG_DATA
+        sub_config = self.config_manager.current_config
         for key in path_parts[:-1]:
             if key not in sub_config:
                 sub_config[key] = {}
             sub_config = sub_config[key]
         sub_config[path_parts[-1]] = self.value
-        save_to_db(CONFIG_DATA)
+        self.config_manager.save_config(self.config_manager.current_config)
+        for config_item in PersistentConfig.registry:
+            config_item.update()
         self.config_value = self.value
 
 
@@ -234,6 +223,7 @@ class AppConfig:
             self._state[key].save()
 
     def __getattr__(self, key):
+        self._state[key].update()
         return self._state[key].value
 
 
@@ -546,9 +536,11 @@ CUSTOM_NAME = os.environ.get("CUSTOM_NAME", "")
 
 if CUSTOM_NAME:
     try:
-        r = requests.get(f"https://api.openwebui.com/api/v1/custom/{CUSTOM_NAME}")
-        data = r.json()
-        if r.ok:
+        redis_client = requests.get(
+            f"https://api.openwebui.com/api/v1/custom/{CUSTOM_NAME}"
+        )
+        data = redis_client.json()
+        if redis_client.ok:
             if "logo" in data:
                 WEBUI_FAVICON_URL = url = (
                     f"https://api.openwebui.com{data['logo']}"
@@ -556,11 +548,11 @@ if CUSTOM_NAME:
                     else data["logo"]
                 )
 
-                r = requests.get(url, stream=True)
-                if r.status_code == 200:
+                redis_client = requests.get(url, stream=True)
+                if redis_client.status_code == 200:
                     with open(f"{STATIC_DIR}/favicon.png", "wb") as f:
-                        r.raw.decode_content = True
-                        shutil.copyfileobj(r.raw, f)
+                        redis_client.raw.decode_content = True
+                        shutil.copyfileobj(redis_client.raw, f)
 
             if "splash" in data:
                 url = (
@@ -569,11 +561,11 @@ if CUSTOM_NAME:
                     else data["splash"]
                 )
 
-                r = requests.get(url, stream=True)
-                if r.status_code == 200:
+                redis_client = requests.get(url, stream=True)
+                if redis_client.status_code == 200:
                     with open(f"{STATIC_DIR}/gsa-logo.svg", "wb") as f:
-                        r.raw.decode_content = True
-                        shutil.copyfileobj(r.raw, f)
+                        redis_client.raw.decode_content = True
+                        shutil.copyfileobj(redis_client.raw, f)
 
             WEBUI_NAME = data["name"]
     except Exception as e:
@@ -767,31 +759,22 @@ DEFAULT_PROMPT_SUGGESTIONS = PersistentConfig(
     "ui.prompt_suggestions",
     [
         {
-            "title": ["Help me study", "vocabulary for a college entrance exam"],
-            "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
-        },
-        {
-            "title": ["Give me ideas", "for what to do with my kids' art"],
-            "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
-        },
-        {
-            "title": ["Tell me a fun fact", "about the Roman Empire"],
-            "content": "Tell me a random fun fact about the Roman Empire",
-        },
-        {
-            "title": ["Show me a code snippet", "of a website's sticky header"],
-            "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+            "title": [
+                "Help me with the FAR",
+            ],
+            "content": "Help me understand the Federal Acquisition Regulations; give me an overview of the FAR Parts and how they're used",
         },
         {
             "title": [
-                "Explain options trading",
-                "if I'm familiar with buying and selling stocks",
+                "Generate ideas for a report",
             ],
-            "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
+            "content": "Generate ideas for a report about historical preservation, specifically focused on federal buildings",
         },
         {
-            "title": ["Overcome procrastination", "give me tips"],
-            "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
+            "title": [
+                "Summarize meeting notes",
+            ],
+            "content": "Summarize meeting notes and pull out key points and next steps. Remember to avoid putting personally identifiable information into the chat.",
         },
     ],
 )
