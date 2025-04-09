@@ -82,6 +82,8 @@ services:
       - ENABLE_USER_SETTINGS_MENU=false
       - ENABLE_RESPONSE_PROMPT_EDIT=false
       - ENABLE_RESPONSE_CONTINUE=false
+      - RAG_EMBEDDING_ENGINE=openai
+      - DEFAULT_MODELS=bedrock_claude_haiku35_pipeline
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
       interval: 30s

@@ -11,14 +11,14 @@ describe('Chats', () => {
 
 	beforeEach(() => {
 		// Login as the regular user
-		cy.loginAdmin();
+		cy.loginAdmin(); // for some reason only the admin user works in GH actions
 		// Visit the home page
 		cy.visit('/');
 	});
 
 	// model name should be the exact text shown in the model selector dropdown
 	const chatTest = (modelName) => {
-		cy.clearTCModal();
+		cy.clearTCModal(); // adding this here seemed to make tests in GH actions move forward
 		// Click on the model selector
 		cy.get('button[id="model-selector-0-button"]').click();
 		// Select the desired model
