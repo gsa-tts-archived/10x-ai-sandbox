@@ -128,8 +128,10 @@ class PgvectorClient:
             for item in items:
                 vector = self.adjust_vector_length(item["vector"])
                 # Sanitize text and metadata to remove NUL characters
-                text = item["text"].replace("\x00", "") if item["text"] else None
-                metadata = (
+                item["text"] = (
+                    item["text"].replace("\x00", "") if item["text"] else None
+                )
+                item["metadata"] = (
                     self._sanitize_metadata(item["metadata"])
                     if item["metadata"]
                     else None
@@ -139,8 +141,8 @@ class PgvectorClient:
                     id=item["id"],
                     vector=vector,
                     collection_name=collection_name,
-                    text=text,
-                    vmetadata=metadata,
+                    text=item["text"],
+                    vmetadata=item["metadata"],
                 )
                 new_items.append(new_chunk)
             self.session.bulk_save_objects(new_items)
@@ -157,6 +159,14 @@ class PgvectorClient:
         try:
             for item in items:
                 vector = self.adjust_vector_length(item["vector"])
+                item["text"] = (
+                    item["text"].replace("\x00", "") if item["text"] else None
+                )
+                item["metadata"] = (
+                    self._sanitize_metadata(item["metadata"])
+                    if item["metadata"]
+                    else None
+                )
                 existing = (
                     self.session.query(DocumentChunk)
                     .filter(DocumentChunk.id == item["id"])
