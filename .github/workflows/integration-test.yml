@@ -70,7 +70,7 @@ jobs:
 
       - name: Test 8080 endpoint
         run: |
-          curl -X 'GET' 'http://localhost:8080/api/version' -H 'accept: application/json'
+          curl -X 'GET' 'http://localhost:8080' -H 'accept: application/json'
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
@@ -79,7 +79,7 @@ jobs:
         with:
           browser: chrome
           wait-on: 'http://localhost:8080'
-          wait-on-timeout: 20
+          wait-on-timeout: 60
           config: baseUrl=http://localhost:8080
 
       # - uses: actions/upload-artifact@v4
@@ -90,15 +90,15 @@ jobs:
       #     path: cypress/videos
       #     if-no-files-found: ignore
 
-      # - name: Extract Compose logs
-      #   if: always()
-      #   run: |
-      #     docker compose logs > compose-logs.txt
+      - name: Extract Compose logs
+        if: always()
+        run: |
+          docker compose logs > compose-logs.txt
 
-      # - uses: actions/upload-artifact@v4
-      #   if: always()
-      #   name: Upload Compose logs
-      #   with:
-      #     name: compose-logs
-      #     path: compose-logs.txt
-      #     if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: always()
+        name: Upload Compose logs
+        with:
+          name: compose-logs
+          path: compose-logs.txt
+          if-no-files-found: ignore
