@@ -33,6 +33,7 @@ jobs:
       OPENID_PROVIDER_URL: ${{ secrets.OPENID_PROVIDER_URL }}
       OPENID_REDIRECT_URI: ${{ secrets.OPENID_REDIRECT_URI }}
       OAUTH_PROVIDER_NAME: ${{ secrets.OAUTH_PROVIDER_NAME }}
+      PORT: 8080
     steps:
       - name: Maximize build space
         uses: AdityaGarg8/remove-unwanted-software@v4.1
@@ -79,7 +80,7 @@ jobs:
         with:
           browser: chrome
           wait-on: 'http://localhost:8080'
-          wait-on-timeout: 60
+          wait-on-timeout: 20
           config: baseUrl=http://localhost:8080
 
       # - uses: actions/upload-artifact@v4
