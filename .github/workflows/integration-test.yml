@@ -47,12 +47,26 @@ jobs:
       - name: Build and run Compose Stack
         run: |
           docker compose \
+            --file docker-compose.api.yaml \
             --file docker-compose.e2e.yaml \
             up --detach --build
 
       - name: Delete Docker build cache
         run: |
           docker builder prune --all --force
+      
+          - name: Wait for Ollama to be up
+          timeout-minutes: 5
+          run: |
+            until curl --output /dev/null --silent --fail http://localhost:11434; do
+              printf '.'
+              sleep 1
+            done
+            echo "Service is up!"
+  
+      - name: Preload Ollama model
+        run: |
+          docker exec ollama ollama pull qwen:0.5b-chat-v1.5-q2_K
 
       - name: Test 8080 endpoint
         run: |
@@ -68,13 +82,13 @@ jobs:
           wait-on-timeout: 20
           config: baseUrl=http://localhost:8080
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        name: Upload Cypress videos
-        with:
-          name: cypress-videos
-          path: cypress/videos
-          if-no-files-found: ignore
+      # - uses: actions/upload-artifact@v4
+      #   if: always()
+      #   name: Upload Cypress videos
+      #   with:
+      #     name: cypress-videos
+      #     path: cypress/videos
+      #     if-no-files-found: ignore
 
       - name: Extract Compose logs
         if: always()
