@@ -55,14 +55,14 @@ jobs:
         run: |
           docker builder prune --all --force
       
-          - name: Wait for Ollama to be up
-          timeout-minutes: 5
-          run: |
-            until curl --output /dev/null --silent --fail http://localhost:11434; do
-              printf '.'
-              sleep 1
-            done
-            echo "Service is up!"
+      - name: Wait for Ollama to be up
+        timeout-minutes: 5
+        run: |
+          until curl --output /dev/null --silent --fail http://localhost:11434; do
+            printf '.'
+            sleep 1
+          done
+          echo "Service is up!"
   
       - name: Preload Ollama model
         run: |
