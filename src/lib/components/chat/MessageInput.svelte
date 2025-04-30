@@ -24,7 +24,14 @@
 	import { uploadFile } from '$lib/apis/files';
 	import { getTools } from '$lib/apis/tools';
 
-	import { WEBUI_BASE_URL, WEBUI_API_BASE_URL, PASTED_TEXT_CHARACTER_LIMIT } from '$lib/constants';
+	import {
+		WEBUI_BASE_URL,
+		WEBUI_API_BASE_URL,
+		PASTED_TEXT_CHARACTER_LIMIT,
+		UPLOAD_ALLOWED_FILE_TYPES,
+		UPLOAD_ALLOWED_FILE_EXTENSIONS,
+		FILE_TYPE_ERROR
+	} from '$lib/constants';
 
 	import Tooltip from '../common/Tooltip.svelte';
 	import InputMenu from './MessageInput/InputMenu.svelte';
@@ -136,11 +143,6 @@
 	};
 
 	const uploadFileHandler = async (file, fullContext: boolean = false) => {
-		if ($_user?.role !== 'admin' && !($_user?.permissions?.chat?.file_upload ?? true)) {
-			toast.error($i18n.t('You do not have permission to upload files.'));
-			return null;
-		}
-
 		const tempItemId = uuidv4();
 		const fileItem = {
 			type: 'file',
@@ -164,7 +166,7 @@
 		files = [...files, fileItem];
 		// Check if the file is an audio file and transcribe/convert it to text file
 		if (['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/x-m4a'].includes(file['type'])) {
-			const res = await transcribeAudio(localStorage.token, file).catch((error) => {
+			const res = await transcribeAudio(file).catch((error) => {
 				toast.error(error);
 				return null;
 			});
@@ -181,7 +183,7 @@
 
 		try {
 			// During the file upload, file content is automatically extracted.
-			const uploadedFile = await uploadFile(localStorage.token, file);
+			const uploadedFile = await uploadFile(file, 'message');
 
 			if (uploadedFile) {
 				console.log('File upload completed:', {
@@ -189,7 +191,6 @@
 					name: fileItem.name,
 					collection: uploadedFile?.meta?.collection_name
 				});
-
 				if (uploadedFile.error) {
 					console.warn('File upload warning:', uploadedFile.error);
 					toast.warning(uploadedFile.error);
@@ -203,12 +204,10 @@
 				fileItem.url = `${WEBUI_API_BASE_URL}/files/${uploadedFile.id}`;
 
 				files = files;
-			} else {
-				files = files.filter((item) => item?.itemId !== tempItemId);
 			}
 		} catch (e) {
-			toast.error(e);
 			files = files.filter((item) => item?.itemId !== tempItemId);
+			toast.error(e.message || e.detail || 'Failed to upload file');
 		}
 	};
 
@@ -221,6 +220,15 @@
 				size: file.size,
 				extension: file.name.split('.').at(-1)
 			});
+
+			const fileExtension = file.name.split('.').at(-1)?.toLowerCase();
+			if (
+				!UPLOAD_ALLOWED_FILE_TYPES.includes(file.type) ||
+				!UPLOAD_ALLOWED_FILE_EXTENSIONS.includes(fileExtension)
+			) {
+				toast.error(FILE_TYPE_ERROR);
+				return;
+			}
 
 			if (
 				($config?.file?.max_size ?? null) !== null &&
@@ -493,6 +501,7 @@
 						bind:this={filesInputElement}
 						bind:files={inputFiles}
 						type="file"
+						accept=".pdf,.doc,.docx,.txt,.rft,.png,.jpg,.jpeg"
 						hidden
 						multiple
 						on:change={async () => {
@@ -705,7 +714,6 @@
 													}
 
 													const res = await generateAutoCompletion(
-														localStorage.token,
 														selectedModelIds.at(0),
 														text,
 														history?.currentId

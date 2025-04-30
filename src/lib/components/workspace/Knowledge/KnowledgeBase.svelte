@@ -112,6 +112,7 @@
 
 	const uploadFileHandler = async (file) => {
 		console.log(file);
+		const fileExtension = file.name.split('.').at(-1)?.toLowerCase();
 
 		const tempItemId = uuidv4();
 		const fileItem = {
@@ -135,7 +136,7 @@
 
 		// Check if the file is an audio file and transcribe/convert it to text file
 		if (['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/x-m4a'].includes(file['type'])) {
-			const res = await transcribeAudio(localStorage.token, file).catch((error) => {
+			const res = await transcribeAudio(file).catch((error) => {
 				toast.error(error);
 				return null;
 			});
@@ -148,8 +149,9 @@
 		}
 
 		try {
-			const uploadedFile = await uploadFile(localStorage.token, file).catch((e) => {
-				toast.error(e);
+			const uploadedFile = await uploadFile(file, 'knowledge').catch((e) => {
+				knowledge.files = knowledge.files.filter((item) => item.itemId != tempItemId);
+				toast.error(e.message || e.detail || 'Failed to upload file');
 				return null;
 			});
 
@@ -165,11 +167,10 @@
 					return item;
 				});
 				await addFileHandler(uploadedFile.id);
-			} else {
-				toast.error($i18n.t('Failed to upload file.'));
 			}
 		} catch (e) {
-			toast.error(e);
+			knowledge.files = knowledge.files.filter((item) => item.itemId != tempItemId);
+			toast.error(e.message || e.detail || 'Failed to upload file');
 		}
 	};
 
@@ -338,7 +339,7 @@
 	// Helper function to maintain file paths within zip
 	const syncDirectoryHandler = async () => {
 		if ((knowledge?.files ?? []).length > 0) {
-			const res = await resetKnowledgeById(localStorage.token, id).catch((e) => {
+			const res = await resetKnowledgeById(id).catch((e) => {
 				toast.error(e);
 			});
 
@@ -355,12 +356,10 @@
 	};
 
 	const addFileHandler = async (fileId) => {
-		const updatedKnowledge = await addFileToKnowledgeById(localStorage.token, id, fileId).catch(
-			(e) => {
-				toast.error(e);
-				return null;
-			}
-		);
+		const updatedKnowledge = await addFileToKnowledgeById(id, fileId).catch((e) => {
+			toast.error(e);
+			return null;
+		});
 
 		if (updatedKnowledge) {
 			knowledge = updatedKnowledge;
@@ -372,11 +371,7 @@
 	};
 
 	const deleteFileHandler = async (fileId) => {
-		const updatedKnowledge = await removeFileFromKnowledgeById(
-			localStorage.token,
-			id,
-			fileId
-		).catch((e) => {
+		const updatedKnowledge = await removeFileFromKnowledgeById(id, fileId).catch((e) => {
 			toast.error(e);
 		});
 
@@ -390,15 +385,11 @@
 		const fileId = selectedFile.id;
 		const content = selectedFile.data.content;
 
-		const res = updateFileDataContentById(localStorage.token, fileId, content).catch((e) => {
+		const res = updateFileDataContentById(fileId, content).catch((e) => {
 			toast.error(e);
 		});
 
-		const updatedKnowledge = await updateFileFromKnowledgeById(
-			localStorage.token,
-			id,
-			fileId
-		).catch((e) => {
+		const updatedKnowledge = await updateFileFromKnowledgeById(id, fileId).catch((e) => {
 			toast.error(e);
 		});
 
@@ -420,7 +411,7 @@
 				return;
 			}
 
-			const res = await updateKnowledgeById(localStorage.token, id, {
+			const res = await updateKnowledgeById(id, {
 				...knowledge,
 				name: knowledge.name,
 				description: knowledge.description,
@@ -431,7 +422,7 @@
 
 			if (res) {
 				toast.success($i18n.t('Knowledge updated successfully'));
-				_knowledge.set(await getKnowledgeBases(localStorage.token));
+				_knowledge.set(await getKnowledgeBases());
 			}
 		}, 1000);
 	};
@@ -517,7 +508,7 @@
 
 		id = $page.params.id;
 
-		const res = await getKnowledgeById(localStorage.token, id).catch((e) => {
+		const res = await getKnowledgeById(id).catch((e) => {
 			toast.error(e);
 			return null;
 		});

@@ -17,24 +17,7 @@ from open_webui.models.auths import Auths
 from open_webui.models.users import Users
 from open_webui.models.groups import Groups, GroupModel, GroupUpdateForm
 from open_webui.config import (
-    DEFAULT_USER_ROLE,
-    ENABLE_OAUTH_SIGNUP,
-    OAUTH_MERGE_ACCOUNTS_BY_EMAIL,
-    OAUTH_PROVIDERS,
-    ENABLE_OAUTH_ROLE_MANAGEMENT,
-    ENABLE_OAUTH_GROUP_MANAGEMENT,
-    OAUTH_ROLES_CLAIM,
-    OAUTH_GROUPS_CLAIM,
-    OAUTH_EMAIL_CLAIM,
-    OAUTH_PICTURE_CLAIM,
-    OAUTH_USERNAME_CLAIM,
-    OAUTH_ALLOWED_ROLES,
-    OAUTH_ADMIN_ROLES,
-    OAUTH_ACR_CLAIM,
-    OAUTH_NONCE_CLAIM,
-    OAUTH_ALLOWED_DOMAINS,
-    WEBHOOK_URL,
-    JWT_EXPIRES_IN,
+    config,
     AppConfig,
 )
 from open_webui.constants import ERROR_MESSAGES
@@ -46,29 +29,30 @@ from open_webui.utils.webhook import post_webhook
 log = logging.getLogger(__name__)
 
 auth_manager_config = AppConfig()
-auth_manager_config.DEFAULT_USER_ROLE = DEFAULT_USER_ROLE
-auth_manager_config.ENABLE_OAUTH_SIGNUP = ENABLE_OAUTH_SIGNUP
-auth_manager_config.OAUTH_MERGE_ACCOUNTS_BY_EMAIL = OAUTH_MERGE_ACCOUNTS_BY_EMAIL
-auth_manager_config.ENABLE_OAUTH_ROLE_MANAGEMENT = ENABLE_OAUTH_ROLE_MANAGEMENT
-auth_manager_config.ENABLE_OAUTH_GROUP_MANAGEMENT = ENABLE_OAUTH_GROUP_MANAGEMENT
-auth_manager_config.OAUTH_ROLES_CLAIM = OAUTH_ROLES_CLAIM
-auth_manager_config.OAUTH_GROUPS_CLAIM = OAUTH_GROUPS_CLAIM
-auth_manager_config.OAUTH_EMAIL_CLAIM = OAUTH_EMAIL_CLAIM
-auth_manager_config.OAUTH_PICTURE_CLAIM = OAUTH_PICTURE_CLAIM
-auth_manager_config.OAUTH_USERNAME_CLAIM = OAUTH_USERNAME_CLAIM
-auth_manager_config.OAUTH_ALLOWED_ROLES = OAUTH_ALLOWED_ROLES
-auth_manager_config.OAUTH_ADMIN_ROLES = OAUTH_ADMIN_ROLES
-auth_manager_config.OAUTH_ACR_CLAIM = OAUTH_ACR_CLAIM
-auth_manager_config.OAUTH_NONCE_CLAIM = OAUTH_NONCE_CLAIM
-auth_manager_config.OAUTH_ALLOWED_DOMAINS = OAUTH_ALLOWED_DOMAINS
-auth_manager_config.WEBHOOK_URL = WEBHOOK_URL
-auth_manager_config.JWT_EXPIRES_IN = JWT_EXPIRES_IN
+auth_manager_config.DEFAULT_USER_ROLE = config.DEFAULT_USER_ROLE
+auth_manager_config.ENABLE_OAUTH_SIGNUP = config.ENABLE_OAUTH_SIGNUP
+auth_manager_config.OAUTH_MERGE_ACCOUNTS_BY_EMAIL = config.OAUTH_MERGE_ACCOUNTS_BY_EMAIL
+auth_manager_config.ENABLE_OAUTH_ROLE_MANAGEMENT = config.ENABLE_OAUTH_ROLE_MANAGEMENT
+auth_manager_config.ENABLE_OAUTH_GROUP_MANAGEMENT = config.ENABLE_OAUTH_GROUP_MANAGEMENT
+auth_manager_config.OAUTH_ROLES_CLAIM = config.OAUTH_ROLES_CLAIM
+auth_manager_config.OAUTH_GROUPS_CLAIM = config.OAUTH_GROUPS_CLAIM
+auth_manager_config.OAUTH_EMAIL_CLAIM = config.OAUTH_EMAIL_CLAIM
+auth_manager_config.OAUTH_PICTURE_CLAIM = config.OAUTH_PICTURE_CLAIM
+auth_manager_config.OAUTH_USERNAME_CLAIM = config.OAUTH_USERNAME_CLAIM
+auth_manager_config.OAUTH_ALLOWED_ROLES = config.OAUTH_ALLOWED_ROLES
+auth_manager_config.OAUTH_ADMIN_ROLES = config.OAUTH_ADMIN_ROLES
+auth_manager_config.OAUTH_ACR_CLAIM = config.OAUTH_ACR_CLAIM
+auth_manager_config.OAUTH_NONCE_CLAIM = config.OAUTH_NONCE_CLAIM
+auth_manager_config.OAUTH_ALLOWED_DOMAINS = config.OAUTH_ALLOWED_DOMAINS
+auth_manager_config.WEBHOOK_URL = config.WEBHOOK_URL
+auth_manager_config.JWT_EXPIRES_IN = config.JWT_EXPIRES_IN
+auth_manager_config.JWT_REFRESH_EXPIRES_IN = config.JWT_REFRESH_EXPIRES_IN
 
 
 class OAuthManager:
     def __init__(self):
         self.oauth = OAuth()
-        for provider_name, provider_config in OAUTH_PROVIDERS.items():
+        for provider_name, provider_config in config.OAUTH_PROVIDERS.items():
             client_kwargs = {"scope": provider_config["scope"]}
             client_kwargs.update(
                 {"code_challenge_method": "S256"} if provider_config["pkce"] else {}
@@ -188,12 +172,12 @@ class OAuthManager:
                 )
 
     async def handle_login(self, provider, request):
-        if provider not in OAUTH_PROVIDERS:
+        if provider not in config.OAUTH_PROVIDERS:
             raise HTTPException(404)
         # If the provider has a custom redirect URL, use that, otherwise automatically generate one
-        redirect_uri = OAUTH_PROVIDERS[provider].get("redirect_uri") or request.url_for(
-            "oauth_callback", provider=provider
-        )
+        redirect_uri = config.OAUTH_PROVIDERS[provider].get(
+            "redirect_uri"
+        ) or request.url_for("oauth_callback", provider=provider)
         client = self.get_client(provider)
         if client is None:
             raise HTTPException(404)
@@ -213,7 +197,7 @@ class OAuthManager:
         )
 
     async def handle_callback(self, provider, request, response):
-        if provider not in OAUTH_PROVIDERS:
+        if provider not in config.OAUTH_PROVIDERS:
             raise HTTPException(404)
         client = self.get_client(provider)
         try:
@@ -221,7 +205,8 @@ class OAuthManager:
         except Exception as e:
             log.warning(f"OAuth callback error: {e}")
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_CRED)
-        user_data: UserInfo = token["userinfo"]
+
+        user_data: UserInfo = token.get("userinfo")
         if not user_data:
             user_data: UserInfo = await client.userinfo(token=token)
         if not user_data:
@@ -334,6 +319,10 @@ class OAuthManager:
             data={"id": user.id},
             expires_delta=parse_duration(auth_manager_config.JWT_EXPIRES_IN),
         )
+        jwt_refresh_token = create_token(
+            data={"id": user.id},
+            expires_delta=parse_duration(auth_manager_config.JWT_REFRESH_EXPIRES_IN),
+        )
 
         if auth_manager_config.ENABLE_OAUTH_GROUP_MANAGEMENT:
             self.update_user_groups(
@@ -342,16 +331,24 @@ class OAuthManager:
                 default_permissions=request.app.state.config.USER_PERMISSIONS,
             )
 
-        # Set the cookie token
+        # Set a cookie with the JWT token
         response.set_cookie(
             key="token",
             value=jwt_token,
-            httponly=True,  # Ensures the cookie is not accessible via JavaScript
+            httponly=True,
+            samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
+            secure=WEBUI_SESSION_COOKIE_SECURE,
+        )
+        # Set a cookie with a refresh token
+        response.set_cookie(
+            key="refresh_token",
+            value=jwt_refresh_token,
+            httponly=True,
             samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
             secure=WEBUI_SESSION_COOKIE_SECURE,
         )
 
-        if ENABLE_OAUTH_SIGNUP.value:
+        if config.ENABLE_OAUTH_SIGNUP:
             oauth_id_token = token.get("id_token")
             response.set_cookie(
                 key="oauth_id_token",
@@ -360,8 +357,10 @@ class OAuthManager:
                 samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
                 secure=WEBUI_SESSION_COOKIE_SECURE,
             )
-        # Redirect back to the frontend with the JWT token
-        redirect_url = f"{request.base_url}auth#token={jwt_token}"
+        # Redirect back to the frontend
+        # api calls should now work since the token
+        # is available in the cookie
+        redirect_url = request.base_url
         return RedirectResponse(url=redirect_url, headers=response.headers)
 
 
