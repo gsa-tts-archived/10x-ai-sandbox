@@ -6,15 +6,19 @@
 // this user will be an admin by virtue of being the first user.
 // But that may not be the case when testing against another DB.
 export const adminUser = {
+	id: '7dd4db1a-1618-4c5b-8f07-88f5e5f99922',
 	name: 'Admin User',
 	email: 'admin@example.com', // pragma: allowlist secret
-	password: 'adminpassword' // pragma: allowlist secret
+	password: 'adminpassword', // pragma: allowlist secret
+	role: 'admin'
 };
 
 export const regUser = {
+	id: 'e14e76c4-0561-45e2-8b79-c3ca2c8aebc6',
 	name: 'Regular User',
 	email: 'user@example.com', // pragma: allowlist secret
-	password: 'userpassword' // pragma: allowlist secret
+	password: 'userpassword', // pragma: allowlist secret
+	role: 'user'
 };
 
 // TODO: gotta be a better way to do this
@@ -67,31 +71,6 @@ const login = (email: string, password: string) => {
 	);
 };
 
-const register = (name: string, email: string, password: string) => {
-	return cy
-		.request({
-			method: 'POST',
-			url: '/api/v1/auths/signup',
-			body: {
-				name: name,
-				email: email,
-				password: password
-			},
-			failOnStatusCode: false
-		})
-		.then((response) => {
-			expect(response.status).to.be.oneOf([200, 400, 403]);
-		});
-};
-
-const registerAdmin = () => {
-	return register(adminUser.name, adminUser.email, adminUser.password);
-};
-
-const registerUser = () => {
-	return register(regUser.name, regUser.email, regUser.password);
-};
-
 const loginAdmin = () => {
 	return login(adminUser.email, adminUser.password);
 };
@@ -100,15 +79,26 @@ const loginUser = () => {
 	return login(regUser.email, regUser.password);
 };
 
+const seedUsers = () => {
+	for (const user of [adminUser, regUser]) {
+		cy.task('runDatabaseQuery', {
+			sql: `DELETE FROM public."user" WHERE id = $1;`,
+			values: [user.id]
+		});
+		const now = Math.floor(Date.now() / 1000);
+		cy.task('runDatabaseQuery', {
+			sql: `INSERT INTO public."user" VALUES ($1, $2, $3, $4, '/user.png', NULL, $5, $6, $7, 'null', 'null', NULL);`,
+			values: [user.id, user.name, user.email, user.role, now, now, now]
+		});
+	}
+};
+
 Cypress.Commands.add('login', (email, password) => login(email, password));
-Cypress.Commands.add('register', (name, email, password) => register(name, email, password));
-Cypress.Commands.add('registerAdmin', () => registerAdmin());
-Cypress.Commands.add('registerUser', () => registerUser());
 Cypress.Commands.add('loginAdmin', () => loginAdmin());
 Cypress.Commands.add('loginUser', () => loginUser());
 Cypress.Commands.add('clearTCModal', () => clearTCModal());
+Cypress.Commands.add('seedUsers', () => seedUsers());
 
 before(() => {
-	cy.registerAdmin();
-	cy.registerUser();
+	cy.seedUsers();
 });

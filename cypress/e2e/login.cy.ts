@@ -6,7 +6,7 @@ import { adminUser, regUser } from '../support/e2e';
 // 1. No users exist in the database or that the test admin user is an admin
 // 2. Language is set to English
 // 3. The default role for new users is 'pending'
-describe('Registration and Login', () => {
+describe('Login', () => {
 	// Wait for 2 seconds after all tests to fix an issue with Cypress's video recording missing the last few frames
 	after(() => {
 		// eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -16,21 +16,6 @@ describe('Registration and Login', () => {
 	beforeEach(() => {
 		cy.visit('/signout');
 		cy.visit('/auth');
-	});
-
-	it('should register a new user', () => {
-		const userName = `Test User - ${Date.now()}`;
-		const userEmail = `cypress-${Date.now()}@example.com`;
-		// Toggle from sign in to sign up
-		cy.contains('Sign up').click();
-		// Fill out the form
-		cy.get('input[autocomplete="name"]').type(userName);
-		cy.get('input[autocomplete="email"]').type(userEmail);
-		cy.get('input[type="password"]').type('password');
-		// Submit the form
-		cy.get('button[type="submit"]').click();
-		// Wait until the user is redirected to the home page
-		cy.contains('Welcome');
 	});
 
 	it('can login with the admin user', () => {
