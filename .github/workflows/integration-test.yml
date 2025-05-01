@@ -14,11 +14,29 @@ jobs:
   cypress-run:
     name: Run Cypress Integration Tests
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg15
+        env:
+          POSTGRES_PASSWORD: postgres # pragma: allowlist secret
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
     env:
-      PUBLIC_DATADOG_APP_ID: ${{ secrets.DATADOG_APP_ID }}
-      PUBLIC_DATADOG_CLIENT_TOKEN: ${{ secrets.DATADOG_CLIENT_TOKEN }}
-      PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN: ${{ secrets.DATADOG_BROWSERLOGS_CLIENT_TOKEN }}
-      PUBLIC_DATADOG_SERVICE: ${{ secrets.DATADOG_SERVICE }}
+      PUBLIC_DATADOG_APP_ID: ${{ secrets.PUBLIC_DATADOG_APP_ID }}
+      PUBLIC_DATADOG_CLIENT_TOKEN: ${{ secrets.PUBLIC_DATADOG_CLIENT_TOKEN }}
+      PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN: ${{ secrets.PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN }}
+      PUBLIC_DATADOG_SERVICE: ${{ secrets.PUBLIC_DATADOG_SERVICE }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -33,24 +51,40 @@ jobs:
       OPENID_PROVIDER_URL: ${{ secrets.OPENID_PROVIDER_URL }}
       OPENID_REDIRECT_URI: ${{ secrets.OPENID_REDIRECT_URI }}
       OAUTH_PROVIDER_NAME: ${{ secrets.OAUTH_PROVIDER_NAME }}
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret
+      PGVECTOR_DB_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret
+      REDIS_URL: redis://localhost:6379
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: pyproject.toml
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install Python dependencies
+        run: pip install -r backend/requirements.txt
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: package.json
 
-      - name: Build and run Compose Stack
-        run: |
-          docker compose \
-            --file docker-compose.e2e.yaml \
-            up --detach --build
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Run the app
+        run: backend/start.sh
 
       - name: Test 8080 endpoint
         run: |
-          curl -X 'GET' 'http://localhost:8080/api/version' -H 'accept: application/json'
+          curl -s -X 'GET' 'http://localhost:8080/api/version' -H 'accept: application/json'
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
