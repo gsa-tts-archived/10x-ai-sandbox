@@ -80,9 +80,11 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
-      - name: Build and run the app
+      - name: Build the app
+        run: npm run build
+
+      - name: Run the app
         run: |
-          npm run build &
           backend/start.sh &
           APP_PID=$!
           # Wait for the app to be ready
