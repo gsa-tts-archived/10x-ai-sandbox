@@ -80,8 +80,9 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
-      - name: Run the app
+      - name: Build and run the app
         run: |
+          npm run build &
           backend/start.sh &
           APP_PID=$!
           # Wait for the app to be ready
@@ -124,19 +125,6 @@ jobs:
         with:
           name: cypress-videos
           path: cypress/videos
-          if-no-files-found: ignore
-
-      - name: Extract Compose logs
-        if: always()
-        run: |
-          docker compose logs > compose-logs.txt
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        name: Upload Compose logs
-        with:
-          name: compose-logs
-          path: compose-logs.txt
           if-no-files-found: ignore
 
   # pytest:
