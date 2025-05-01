@@ -7,7 +7,7 @@ Flask==3.0.3
 Flask-Cors==5.0.0
 
 python-socketio==5.11.3
-python-jose==3.3.0
+python-jose==3.4.0
 passlib[bcrypt]==1.7.4
 
 requests==2.32.3
@@ -90,11 +90,7 @@ extract_msg
 pydub
 duckduckgo-search~=6.3.5
 
-<<<<<<< Updated upstream
 ## Vertex AI
-=======
-## Gemini via google cloud
->>>>>>> Stashed changes
 google-cloud-aiplatform==1.88.0
 
 ## Google Drive
