@@ -16,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PUBLIC_DATADOG_APP_ID: ${{ secrets.DATADOG_APP_ID }}
-      PUBLIC_DATADOG_CLIENT_TOKEN:  ${{ secrets.DATADOG_CLIENT_TOKEN }}
+      PUBLIC_DATADOG_CLIENT_TOKEN: ${{ secrets.DATADOG_CLIENT_TOKEN }}
       PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN: ${{ secrets.DATADOG_BROWSERLOGS_CLIENT_TOKEN }}
-      PUBLIC_DATADOG_SERVICE:  ${{ secrets.DATADOG_SERVICE }}
+      PUBLIC_DATADOG_SERVICE: ${{ secrets.DATADOG_SERVICE }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -34,13 +34,6 @@ jobs:
       OPENID_REDIRECT_URI: ${{ secrets.OPENID_REDIRECT_URI }}
       OAUTH_PROVIDER_NAME: ${{ secrets.OAUTH_PROVIDER_NAME }}
     steps:
-      - name: Maximize build space
-        uses: AdityaGarg8/remove-unwanted-software@v4.1
-        with:
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -156,9 +149,9 @@ jobs:
 
       - name: Test backend with Postgres+Redis
         env:
-          WEBUI_SECRET_KEY: secret-key  # pragma: allowlist secret
+          WEBUI_SECRET_KEY: secret-key # pragma: allowlist secret
           GLOBAL_LOG_LEVEL: debug
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres  # pragma: allowlist secret
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret
           PGVECTOR_DB_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret
           REDIS_URL: redis://localhost:6379
           DATABASE_POOL_SIZE: 10
