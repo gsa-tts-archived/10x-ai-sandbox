@@ -33,6 +33,7 @@ jobs:
           - 6379:6379
 
     env:
+      WEBUI_SECRET_KEY: abcdef123 # pragma: allowlist secret
       PUBLIC_DATADOG_APP_ID: ${{ secrets.PUBLIC_DATADOG_APP_ID }}
       PUBLIC_DATADOG_CLIENT_TOKEN: ${{ secrets.PUBLIC_DATADOG_CLIENT_TOKEN }}
       PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN: ${{ secrets.PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN }}
