@@ -81,11 +81,25 @@ jobs:
         run: npm install
 
       - name: Run the app
-        run: backend/start.sh
-
-      - name: Test 8080 endpoint
         run: |
-          curl -s -X 'GET' 'http://localhost:8080/api/version' -H 'accept: application/json'
+          backend/start.sh &
+          APP_PID=$!
+          # Wait for the app to be ready
+          for i in {1..30}; do
+            if curl -s http://localhost:8080/api/version > /dev/null; then
+              echo "App is ready!"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "App failed to start within timeout"
+              kill $APP_PID
+              exit 1
+            fi
+            echo "Waiting for app to start... ($i/30)"
+            sleep 2
+          done
+          # Store PID for cleanup
+          echo "APP_PID=$APP_PID" >> $GITHUB_ENV
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
@@ -96,6 +110,13 @@ jobs:
           wait-on: 'http://localhost:8080'
           wait-on-timeout: 20
           config: baseUrl=http://localhost:8080
+
+      - name: Terminate the app
+        if: always()
+        run: |
+          if [ ! -z "$APP_PID" ]; then
+            kill $APP_PID || true
+          fi
 
       - uses: actions/upload-artifact@v4
         if: always()
