@@ -53,8 +53,8 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        # env:
-        #   DEBUG: '@cypress/github-action'
+        env:
+          DEBUG: '@cypress/github-action'
         with:
           browser: chrome
           wait-on: 'http://localhost:8080'
