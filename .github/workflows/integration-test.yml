@@ -48,10 +48,6 @@ jobs:
             --file docker-compose.e2e.yaml \
             up --detach --build
 
-      - name: Delete Docker build cache
-        run: |
-          docker builder prune --all --force
-
       - name: Test 8080 endpoint
         run: |
           curl -X 'GET' 'http://localhost:8080/api/version' -H 'accept: application/json'
