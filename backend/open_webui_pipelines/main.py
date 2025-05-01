@@ -3,18 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import run_in_threadpool
 
 
-from starlette.responses import StreamingResponse, Response
-from pydantic import BaseModel, ConfigDict
-from typing import List, Union, Generator, Iterator
+from starlette.responses import StreamingResponse
+from pydantic import BaseModel
+from typing import Generator, Iterator
 
 
-from utils.pipelines.auth import bearer_security, get_current_user
+from utils.pipelines.auth import get_current_user
 from utils.pipelines.main import get_last_user_message, stream_message_template
 from utils.pipelines.misc import convert_to_raw_url
 from utils.pipelines.custom_exceptions import RateLimitException
 
 from contextlib import asynccontextmanager
-from concurrent.futures import ThreadPoolExecutor
 from schemas import FilterForm, OpenAIChatCompletionForm
 from urllib.parse import urlparse
 
@@ -280,7 +279,7 @@ async def get_models():
                         if pipeline.get("type", "pipe") == "filter"
                         else {}
                     ),
-                    "valves": pipeline["valves"] != None,
+                    "valves": pipeline["valves"] is not None,
                 },
             }
             for pipeline in app.state.PIPELINES.values()
