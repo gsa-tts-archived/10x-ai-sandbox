@@ -2,11 +2,14 @@ import os
 import json
 from typing import Iterator, List, Union
 import base64
+import logging
+import sys
 
-import vertexai
-from google.oauth2 import service_account
-from pydantic import BaseModel, Field
 import asyncio
+from pydantic import BaseModel, Field
+
+from google.oauth2 import service_account
+import vertexai
 from vertexai.generative_models import (
     Content,
     GenerationConfig,
@@ -16,6 +19,14 @@ from vertexai.generative_models import (
     Part,
     Image,
 )
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 class Pipeline:
@@ -122,7 +133,7 @@ class Pipeline:
                         backoff *= 2
                     else:
                         print("Initialization failed after maximum retries.")
-                    raise
+                        logger.error("Vertex AI client initialization failed.")
 
     async def on_shutdown(self) -> None:
         """This function is called when the server is stopped."""
