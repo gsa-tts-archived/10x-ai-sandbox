@@ -2,14 +2,10 @@ import os
 import json
 from typing import Iterator, List, Union
 import base64
-import logging
-import sys
 
-import asyncio
-from pydantic import BaseModel, Field
-
-from google.oauth2 import service_account
 import vertexai
+from google.oauth2 import service_account
+from pydantic import BaseModel, Field
 from vertexai.generative_models import (
     Content,
     GenerationConfig,
@@ -19,14 +15,6 @@ from vertexai.generative_models import (
     Part,
     Image,
 )
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
 
 
 class Pipeline:
@@ -111,29 +99,12 @@ class Pipeline:
                 location=self.valves.GOOGLE_CLOUD_REGION,
                 credentials=credentials,
             )
-            max_retries = 5
-            attempt = 0
-            backoff = 1  # initial backoff time in seconds
-            while attempt < max_retries:
-                try:
-                    model = GenerativeModel("gemini-2.0-flash")
-                    response = model.generate_content(
-                        "Please respond with 'hi' and nothing else.", stream=False
-                    )
-                    if "hi" in response.text.lower():
-                        print("Vertex AI client initialized successfully.")
-                    break
-                except Exception as e:
-                    attempt += 1
-                    if attempt < max_retries:
-                        print(
-                            f"Initialization failed on attempt {attempt} with error {e}. Retrying in {backoff} seconds..."  # noqa: E501
-                        )
-                        await asyncio.sleep(min(backoff, 600))
-                        backoff *= 2
-                    else:
-                        print("Initialization failed after maximum retries.")
-                        logger.error("Vertex AI client initialization failed.")
+            model = GenerativeModel("gemini-2.0-flash")
+            response = model.generate_content(
+                "Please respond with 'hi' and nothing else.", stream=False
+            )
+            if "hi" in response.text.lower():
+                print("Vertex AI client initialized successfully.")
 
     async def on_shutdown(self) -> None:
         """This function is called when the server is stopped."""
