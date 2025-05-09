@@ -132,8 +132,8 @@ class Pipeline:
                         await asyncio.sleep(min(backoff, 600))
                         backoff *= 2
                     else:
-                        print("Initialization failed after maximum retries.")
-                        logger.error("Vertex AI client initialization failed.")
+                        logger.error("Vertex AI client initialization failed after maximum retries.")
+                        raise RuntimeError("Vertex AI client initialization failed after maximum retries.")
 
     async def on_shutdown(self) -> None:
         """This function is called when the server is stopped."""
