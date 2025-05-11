@@ -671,8 +671,6 @@ async def generate_openai_chat_completion(form_data: OpenAIChatCompletionForm):
         if form_data.stream:
 
             def stream_content():
-                ttft = None
-                request_init_time = time.time()
                 res = pipe(
                     user_message=user_message,
                     model_id=pipeline_id,
@@ -693,8 +691,10 @@ async def generate_openai_chat_completion(form_data: OpenAIChatCompletionForm):
                             line = line.model_dump_json()
                             line = f"data: {line}"
 
-                        if isinstance(line, (bytes, bytearray)):
+                        try:
                             line = line.decode("utf-8")
+                        except:
+                            pass
 
                         logger.debug(f"stream_content:Generator:{line}")
 
@@ -703,16 +703,6 @@ async def generate_openai_chat_completion(form_data: OpenAIChatCompletionForm):
                         else:
                             line = stream_message_template(form_data.model, line)
                             yield f"data: {json.dumps(line)}\n\n"
-                        if ttft is None and line:
-                            ttft = time.time() - request_init_time
-                            ttft_log = {
-                                "pipeline_ttft_name": pipeline_id,
-                                "pipeline_ttft": ttft * 1000,
-                                "pipeline_ttft_model_id": pipeline_id,
-                                "pipeline_ttft_first_tokens": line,
-                            }
-                            json_ttft_log = json.dumps(ttft_log)
-                            logger.info(json_ttft_log)
 
                 if isinstance(res, str) or isinstance(res, Generator):
                     finish_message = {
