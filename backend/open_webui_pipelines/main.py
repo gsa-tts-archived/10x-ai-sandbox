@@ -573,7 +573,8 @@ async def filter_inlet(pipeline_id: str, form_data: FilterForm):
         pipeline = app.state.PIPELINES[form_data.body["model"]]
         if pipeline["type"] == "manifold":
             pipeline_id = pipeline_id.split(".")[0]
-    except:
+    except Exception as e:
+        logger.error(f"Error in filter_inlet {pipeline_id}: {e}")
         pass
 
     pipeline = PIPELINE_MODULES[pipeline_id]
@@ -618,14 +619,15 @@ async def filter_outlet(pipeline_id: str, form_data: FilterForm):
         pipeline = app.state.PIPELINES[form_data.body["model"]]
         if pipeline["type"] == "manifold":
             pipeline_id = pipeline_id.split(".")[0]
-    except:
+    except Exception as e:
+        logger.error(f"Error in filter_outlet {pipeline_id}: {e}")
         pass
 
     pipeline = PIPELINE_MODULES[pipeline_id]
 
     try:
         if hasattr(pipeline, "outlet"):
-            body = await pipeline.outlet(form_data.body, form_data.user)
+            body = await pipeline.outlet(form_data.body, user=form_data.user)
             return body
         else:
             return form_data.body
@@ -691,10 +693,8 @@ async def generate_openai_chat_completion(form_data: OpenAIChatCompletionForm):
                             line = line.model_dump_json()
                             line = f"data: {line}"
 
-                        try:
+                        if isinstance(line, (bytes, bytearray)):
                             line = line.decode("utf-8")
-                        except:
-                            pass
 
                         logger.debug(f"stream_content:Generator:{line}")
 
