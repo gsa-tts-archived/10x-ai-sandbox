@@ -252,7 +252,7 @@ class Pipeline:
 
         except Exception as e:
             print(f"Error generating content: {e}\n{traceback.print_exc()}")
-            return f"An error occurred: {str(e)}"
+            raise
 
     async def outlet(self, body: dict, user: Optional[dict] = None) -> dict:
         print(f"outlet:{__name__}")
