@@ -3,7 +3,6 @@ import json
 from typing import Iterator, List, Union, Optional
 import base64
 import re
-import traceback
 
 from pydantic import BaseModel, Field
 
@@ -251,7 +250,7 @@ class Pipeline:
                     yield str_chunk
 
         except Exception as e:
-            print(f"Error generating content: {e}\n{traceback.print_exc()}")
+            print(f"Error generating content: {e}")
             raise
 
     async def outlet(self, body: dict, user: Optional[dict] = None) -> dict:
