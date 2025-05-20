@@ -94,7 +94,9 @@ export default defineConfig({
 		reuseExistingServer: !process.env.CI,
 		env: {
 			PYTHONPATH: 'backend',
-			WEBUI_AUTH_TRUSTED_EMAIL_HEADER: 'X-User-Email'
+			WEBUI_AUTH_TRUSTED_EMAIL_HEADER: 'X-User-Email',
+			AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || '',
+			AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || ''
 		}
 	}
 });
