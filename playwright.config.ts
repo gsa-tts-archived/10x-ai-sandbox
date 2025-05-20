@@ -47,17 +47,17 @@ export default defineConfig({
 			testMatch: /setup\..*\.ts/
 		},
 
-		// {
-		// 	name: 'chromium',
-		// 	use: { ...devices['Desktop Chrome'] },
-		// 	dependencies: ['setup']
-		// },
+		{
+			name: 'chromium',
+			use: { ...devices['Desktop Chrome'] },
+			dependencies: ['setup']
+		},
 
-		// {
-		// 	name: 'firefox',
-		// 	use: { ...devices['Desktop Firefox'] },
-		// 	dependencies: ['setup']
-		// },
+		{
+			name: 'firefox',
+			use: { ...devices['Desktop Firefox'] },
+			dependencies: ['setup']
+		},
 
 		{
 			name: 'webkit',
