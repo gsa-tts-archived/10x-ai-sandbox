@@ -93,6 +93,7 @@ export default defineConfig({
 		name: 'App',
 		reuseExistingServer: !process.env.CI,
 		env: {
+			PYTHONPATH: 'backend',
 			WEBUI_AUTH_TRUSTED_EMAIL_HEADER: 'X-User-Email'
 		}
 	}
