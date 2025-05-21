@@ -295,14 +295,12 @@ class Pipeline:
                 # TODO: unwanted whitespaces after links are added by the md parser on front-end...
                 if inline_md_links:
                     inline_md_links = ", ".join(inline_md_links)
-                    print(f"inline_md_links: |{inline_md_links}|")
                 else:
                     inline_md_links = url
 
                 new_assistant_message = new_assistant_message.replace(
                     text, f"{text} [{inline_md_links}]"
                 )
-                print(f"new_assistant_message: |{new_assistant_message}|")
 
             new_assistant_message += f"\nSources:\n"
             for i, url in enumerate(sources):
