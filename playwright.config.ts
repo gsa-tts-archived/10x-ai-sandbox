@@ -93,11 +93,14 @@ export default defineConfig({
 		name: 'App',
 		reuseExistingServer: !process.env.CI,
 		env: {
+			PORT: '8080',
 			PYTHONPATH: 'backend',
 			WEBUI_AUTH_TRUSTED_EMAIL_HEADER: 'X-User-Email',
 			DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/postgres', // pragma: allowlist secret
 			AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || '',
-			AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || ''
+			AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '',
+			AWS_DEFAULT_REGION: process.env.AWS_DEFAULT_REGION || '',
+			BEDROCK_ASSUME_ROLE: process.env.BEDROCK_ASSUME_ROLE || ''
 		}
 	}
 });
